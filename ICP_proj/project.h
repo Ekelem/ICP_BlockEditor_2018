@@ -5,22 +5,22 @@
 #include "block.h"
 
 #include <list>
-
-typedef struct project_settings
-{
-    type_mgr type_lib;
-    std::list<block> block_lib;
-}proj_settings;
-
-extern proj_settings * editor_general;
+#include <iostream>
 
 class project
 {
 public:
     project();
-    void make_actual();
+    void run();
+    void set_start(block * first);
+    type_mgr & get_type_lib();
+    std::list<block> & get_block_lib();
 private:
-    proj_settings main_parts;
+    type_mgr type_lib;
+    std::list<block> block_lib;
+    block * start;
+
+    bool check_cycles();
 };
 
 #endif // PROJECT_H

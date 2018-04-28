@@ -1,10 +1,12 @@
 #include "typemanager.h"
 
+#include <iostream>
+
 
 
 type_mgr::type_mgr()
 {
-
+    default_types();
 }
 
 void type_mgr::create_type(std::string type_name)
@@ -38,4 +40,49 @@ bool type_mgr::type_already_exists(std::string type_name)
             return true;
 
     return false;
+}
+
+void type_mgr::default_types()
+{
+    //weight
+    create_type("kilogram");
+    create_type("gram");
+    create_type("miligram");
+    create_type("ton");
+    create_type("pound");
+    create_type("ounc");
+
+    //length
+    create_type("meter");
+    create_type("decimeter");
+    create_type("centimeter");
+    create_type("milimeter");
+    create_type("kilometer");
+    create_type("inch");
+    create_type("foot");
+    create_type("yard");
+    create_type("mile");
+
+    //liquid
+    create_type("liter");
+    create_type("deciliter");
+    create_type("gallon");
+
+    //time
+    create_type("minute");
+    create_type("second");
+    create_type("hour");
+    create_type("day");
+    create_type("week");
+    create_type("year");
+
+    //debug();
+}
+
+void type_mgr::debug()
+{
+    for (auto i = type_lib.begin(); i!= type_lib.end(); i++)
+    {
+        std::cerr << *i << std::endl;
+    }
 }

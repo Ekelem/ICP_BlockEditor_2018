@@ -53,3 +53,22 @@ value_t block::get_out_port(unsigned int index)
 
     return out_ports_m[index].value;
 }
+
+block * block::get_sequence_succ()
+{
+    return call_next;
+}
+
+size_t block::get_id()
+{
+    return instance_id;
+}
+
+void block::instantiate()
+{
+    static size_t id = 0;
+    size_t old = id;
+    instance_id = id++;
+    if (instance_id < old)
+        throw 1;    //overflow
+}

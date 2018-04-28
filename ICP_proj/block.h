@@ -43,15 +43,20 @@ private:
 class block
 {
 public:
-    block() {};
+    block() {instantiate(); call_next = nullptr;}
     ~block() {};
     void set_in_port(unsigned int index, value_i & val);
     value_t get_out_port(unsigned int index);
+    block * get_sequence_succ();
+    size_t get_id();
     virtual void run();
 protected:
     block* call_next;
     std::vector<in_port> in_ports_m;
     std::vector<out_port> out_ports_m;
+private:
+    size_t instance_id;
+    void instantiate();
 };
 
 #endif // BLOCK_H
