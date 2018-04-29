@@ -3,8 +3,9 @@
 #include <iostream>
 #include <string>
 
-Block_UI::Block_UI(QWidget *parent) : QWidget(parent)
+Block_UI::Block_UI(QWidget *parent, QString name) : QWidget(parent)
 {
+    name_m = name;
     this->setFixedSize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
 }
 
@@ -25,7 +26,7 @@ void Block_UI::paintEvent(QPaintEvent *)
     painter.setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter.setFont(sansFont);
-    painter.drawText(size, Qt::AlignHCenter, "Name");
+    painter.drawText(size, Qt::AlignHCenter, name_m);
     painter.setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
     painter.drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
 

@@ -2,7 +2,7 @@
 
 Canvas_UI::Canvas_UI(QWidget *parent) : QWidget(parent)
 {
-
+    setAcceptDrops(true);
 }
 
 void Canvas_UI::paintEvent(QPaintEvent *)
@@ -27,10 +27,25 @@ void Canvas_UI::mouseMoveEvent(QMouseEvent *event)
     if(event->buttons() & Qt::LeftButton)
     {
         QPoint diff = mapToParent(event->pos() - offset);
-        //std::cerr << diff.x() << std::endl;
         int old = this->pos().x();
         this->move(diff);
-        //scroll->horizontalScrollBar()->setValue(scroll->horizontalScrollBar()->value() - diff.x());
-        //scroll->verticalScrollBar()->setValue(scroll->verticalScrollBar()->value() - diff.y());
+    }
+}
+
+void Canvas_UI::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/plain"))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void Canvas_UI::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->text() == "Create Block")
+    {
+        Block_UI * new_block = new Block_UI(this, event->mimeData()->data("block"));
+        new_block->move(event->pos());
+        new_block->show();
     }
 }

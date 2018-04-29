@@ -14,13 +14,14 @@ class Block_UI : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Block_UI(QWidget *parent = nullptr);
+    explicit Block_UI(QWidget *parent = nullptr, QString name = "Name");
 protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 private:
     QPoint offset;
+    QString name_m;
 signals:
 
 public slots:
