@@ -13,13 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
 
-    QTreeWidgetItem *aritmetic = new QTreeWidgetItem(ui->Palette);
+    QTreeWidgetItem *aritmetic = new QTreeWidgetItem(ui->block_palette);
     aritmetic->setText(0, tr("Aritmetic"));
 
     QTreeWidgetItem *ADD = new QTreeWidgetItem(aritmetic);
         ADD->setText(0, tr("ADD"));
     QTreeWidgetItem *SUB = new QTreeWidgetItem(aritmetic);
         SUB->setText(0, tr("SUB"));
+
 }
 
 MainWindow::~MainWindow()

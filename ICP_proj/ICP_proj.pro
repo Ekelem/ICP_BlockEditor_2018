@@ -28,14 +28,20 @@ SOURCES += \
         mainwindow.cpp \
     typemanager.cpp \
     block.cpp \
-    project.cpp
+    project.cpp \
+    block_ui.cpp \
+    canvas_ui.cpp \
+    blockpalette_ui.cpp
 
 HEADERS += \
         mainwindow.h \
     typemanager.h \
     block.h \
     project.h \
-    block_templates.h
+    block_templates.h \
+    block_ui.h \
+    canvas_ui.h \
+    blockpalette_ui.h
 
 FORMS += \
         mainwindow.ui
