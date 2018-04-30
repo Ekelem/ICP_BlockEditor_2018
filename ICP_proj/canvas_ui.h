@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QList>
 #include <QMainWindow>
+#include <QMimeData>
 #include <iostream> //debug
 
 #include "block_ui.h"

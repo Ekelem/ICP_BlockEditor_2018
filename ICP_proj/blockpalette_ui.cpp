@@ -51,7 +51,7 @@ void BlockName_UI::mouseMoveEvent(QMouseEvent *event)
         QDrag *drag = new QDrag((QWidget*)this);
         QMimeData *mimeData = new QMimeData;
 
-        QByteArray data = QByteArray(this->text().toAscii());
+        QByteArray data = QByteArray(this->text().toLatin1());
 
         mimeData->setText("Create Block");
         mimeData->setData("block", data);

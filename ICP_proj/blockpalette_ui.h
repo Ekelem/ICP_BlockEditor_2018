@@ -6,6 +6,9 @@
 #include <QMouseEvent>
 #include <QApplication>
 #include <QLabel>
+#include <QMimeData>
+#include <QString>
+#include <QDrag>
 
 #include <iostream>
 

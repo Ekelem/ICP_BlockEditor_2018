@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QApplication>
+#include <QMimeData>
 
 #define UI_BLOCK_HEADER_LINE_OFFSET 30
 #define UI_BLOCK_WIDTH_BASE 120
