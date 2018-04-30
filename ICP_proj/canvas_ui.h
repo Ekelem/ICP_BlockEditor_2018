@@ -14,12 +14,15 @@
 
 #include "block_ui.h"
 #include "mainwindow.h"
+#include "project.h"
+#include "block_templates.h"
 
 class Canvas_UI : public QWidget
 {
     Q_OBJECT
 public:
     explicit Canvas_UI(QWidget *parent = nullptr);
+    void mark_project(project * actual_project);
 protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
@@ -29,7 +32,7 @@ protected:
     void dropEvent(QDropEvent *event);
 private:
     QPoint offset;
-    QList<Block_UI *> blocks;
+    project * actual_project_m;
 
 signals:
 

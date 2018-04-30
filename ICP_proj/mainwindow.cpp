@@ -7,17 +7,20 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    actual_project_m = new project();
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icons/icon-c++.svg"));
 
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
 
+    ui->main_field->mark_project(actual_project_m);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete actual_project_m;
 }
 
 /*

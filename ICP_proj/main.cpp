@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    std::list<project> opened_projects;
+    /*std::list<project> opened_projects;
 
     project test_00 = project();
     opened_projects.push_back(test_00);   //create new project
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     test_00.set_start(&block_test);
     test_00.run();
 
-    std::cout << "out port 0 = " << block_test.get_out_port(0) << std::endl;    //should be 5 + 3 = 8
+    std::cout << "out port 0 = " << block_test.get_out_port(0) << std::endl;    //should be 5 + 3 = 8*/
 
     //-----------------------------------------------------------------------------------------------
 

@@ -14,10 +14,10 @@ public:
     void run();
     void set_start(block * first);
     type_mgr & get_type_lib();
-    std::list<block> & get_block_lib();
+    std::list<block *> &get_block_lib();
 private:
     type_mgr type_lib;
-    std::list<block> block_lib;
+    std::list<block*> block_lib;
     block * start;
 
     bool check_cycles();

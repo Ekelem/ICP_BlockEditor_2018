@@ -11,7 +11,7 @@ type_mgr & project::get_type_lib()
     return type_lib;
 }
 
-std::list<block> & project::get_block_lib()
+std::list<block*> & project::get_block_lib()
 {
     return block_lib;
 }

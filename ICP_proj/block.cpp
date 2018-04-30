@@ -46,6 +46,11 @@ void block::set_in_port(unsigned int index, value_i & val)
     in_ports_m[index].attach(val);
 }
 
+void block::set_ui(Block_UI *new_ui)
+{
+    ui = new_ui;
+}
+
 value_t block::get_out_port(unsigned int index)
 {
     if (index > out_ports_m.size())
