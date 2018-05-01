@@ -27,6 +27,8 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void keyPressEvent(QKeyEvent *event);
+
 private:
     Ui::MainWindow *ui;
     project * actual_project_m;

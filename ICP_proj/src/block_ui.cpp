@@ -1,7 +1,9 @@
 #include "block_ui.h"
+#include "canvas_ui.h"
 
 #include <iostream>
 #include <string>
+#include <QDebug>
 
 Block_UI::Block_UI(QWidget *parent, QString name) : QWidget(parent)
 {
@@ -40,8 +42,10 @@ void Block_UI::paintEvent(QPaintEvent *)
 
 void Block_UI::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton) {
         offset = event->pos();
+    }
+    QWidget::mousePressEvent(event);
 }
 
 void Block_UI::mouseMoveEvent(QMouseEvent *event)
@@ -49,5 +53,12 @@ void Block_UI::mouseMoveEvent(QMouseEvent *event)
     if(event->buttons() & Qt::LeftButton)
     {
             this->move(mapToParent(event->pos() - offset));
+    }
+}
+
+void Block_UI::keyPressEvent(QKeyEvent *event){
+    qDebug() << "asd";
+    if(event->key() == Qt::Key_Delete) {
+        delete this;
     }
 }

@@ -22,12 +22,13 @@ void Canvas_UI::paintEvent(QPaintEvent *)
     painter.setBrush(canvas);
     painter.drawRect(size);
 }
-
+#include <QDebug>
 void Canvas_UI::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
         //offset = mapToParent(event->pos());
         offset = event->pos();
+    blockRemovePos = event->pos();
 }
 
 void Canvas_UI::mouseMoveEvent(QMouseEvent *event)

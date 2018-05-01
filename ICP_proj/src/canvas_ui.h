@@ -23,6 +23,7 @@ class Canvas_UI : public QWidget
 public:
     explicit Canvas_UI(QWidget *parent = nullptr);
     void mark_project(project * actual_project);
+    QPoint blockRemovePos = QPoint();
 protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);

@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    setMouseTracking(true);
     actual_project_m = new project();
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
@@ -140,5 +141,13 @@ void MainWindow::on_actionQuit_triggered()
     if(reply == QMessageBox::Cancel)
     {
         return;
+    }
+}
+
+
+void MainWindow::keyPressEvent(QKeyEvent *event){
+    if(event->key() == Qt::Key_Delete) {
+        Block_UI *elem = (Block_UI *)ui->main_field->childAt(ui->main_field->blockRemovePos);
+        delete elem;
     }
 }

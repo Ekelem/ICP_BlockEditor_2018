@@ -21,6 +21,8 @@ protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
+    void keyPressEvent(QKeyEvent *event);
 private:
     QPoint offset;
     QString name_m;
