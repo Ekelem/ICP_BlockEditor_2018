@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QList>
+#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,52 +26,112 @@ MainWindow::~MainWindow()
     delete actual_project_m;
 }
 
-/*
- * Event for New File
- * Question: Should ask for saving the actual state?
- */
 void MainWindow::on_actionNew_File_triggered()
 {
+    QList<Block_UI *>list = ui->main_field->findChildren<Block_UI *>();
 
+    foreach(Block_UI *elem, list) {
+        delete elem;
+    }
 }
 
-
-/*
- * Event for Load File
- * Question: Should ask for saving the actual state?
- * Question: Where should save all the data from the file?
- */
 void MainWindow::on_actionLoad_File_triggered()
 {
-    QString filename=QFileDialog::getOpenFileName(this, tr("Open File"), "", "All files (*.*);;");
-    if (filename != "")
-        QMessageBox::information(this, tr("File Name"), filename);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Address Book"), "", tr("Block Editor (*.be2018);;All Files (*)"));
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(0, "error", file.errorString());
+    }
+
+    emit on_actionNew_File_triggered();
+
+    QTextStream in(&file);
+    loadMode mode = ADD_BLOCKS;
+
+    while(!in.atEnd()) {
+        QString line = in.readLine();
+        if (line == "# BLOCKS") {
+            mode = ADD_BLOCKS;
+        }
+        else if (line == "# CONNECTIONS") {
+            mode = ADD_CONNECTIONS;
+        }
+        else {
+            if (mode == ADD_BLOCKS) {
+                QStringList lineList = line.split(" ");
+                QPoint pos = QPoint();
+                Block_UI *new_block;
+                if (lineList.count() != 3)
+                    return;
+                pos.setX(lineList.at(0).toInt());
+                pos.setY(lineList.at(1).toInt());
+                new_block = new Block_UI(ui->main_field, lineList.at(2));
+
+                new_block->move(pos);
+                new_block->show();
+            }
+            else {
+                //TODO - connections
+            }
+        }
+
+    }
+
+    file.close();
 }
 
 
-/*
- * Event for Save File
- */
 void MainWindow::on_actionSave_File_triggered()
 {
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Address Book"), "",
+        tr("Block Editor files (*.be2018);;All Files (*)"));
 
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    std::string extension = fileName.toStdString().substr(fileName.length()-7);
+    fileName = extension == ".be2018" ? fileName : fileName+".be2018";
+
+    QFile outputFile(fileName);
+    outputFile.open(QIODevice::WriteOnly);
+
+    if(!outputFile.isOpen()){
+        qDebug() << "- Error, unable to open" << fileName << "for output";
+    }
+
+    QTextStream outStream(&outputFile);
+    outStream << "# BLOCKS\n";
+
+
+    QList<Block_UI *>list = ui->main_field->findChildren<Block_UI *>();
+
+    foreach(Block_UI *elem, list) {
+        int x = elem->geometry().topLeft().x();
+        int y = elem->geometry().topLeft().y();
+        outStream << x << " " << y << " " << elem->get_name_m() << "\n";
+    }
+    //TODO - Connections between blocks
+
+    outputFile.close();
 }
 
 
-/*
- * Quit application
- */
 void MainWindow::on_actionQuit_triggered()
 {
     QMessageBox::StandardButton reply;
 
-    reply = QMessageBox::question(this, "This file has changes, do you want to save them?", "Your changes will be lost if you close this item without saving.",
+    reply = QMessageBox::question(this, "This file may contain changes, do you want to save them?", "Your changes will be lost if you quit without saving.",
         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
     if (reply == QMessageBox::Save) {
-        QMessageBox::information(this, tr("Saved"), "");
+        emit on_actionSave_File_triggered();
+        QMessageBox::information(this, "Information", "Successfully saved...");
         close();
-        // TODO - Call NewFile trigger
     }
     if (reply == QMessageBox::Discard)
     {

@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "project.h"
 
+enum loadMode { ADD_BLOCKS, ADD_CONNECTIONS };
+
 namespace Ui {
 class MainWindow;
 }

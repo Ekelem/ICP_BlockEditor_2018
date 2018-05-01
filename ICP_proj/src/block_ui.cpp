@@ -9,6 +9,11 @@ Block_UI::Block_UI(QWidget *parent, QString name) : QWidget(parent)
     this->setFixedSize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
 }
 
+QString Block_UI::get_name_m() {
+    return name_m;
+}
+
+
 void Block_UI::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);

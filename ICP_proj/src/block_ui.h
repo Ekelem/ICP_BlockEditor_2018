@@ -16,6 +16,7 @@ class Block_UI : public QWidget
     Q_OBJECT
 public:
     explicit Block_UI(QWidget *parent = nullptr, QString name = "Name");
+    QString get_name_m();
 protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
