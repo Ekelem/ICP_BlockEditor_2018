@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Basic class of a block-backend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef CANVAS_UI_H
 #define CANVAS_UI_H
 

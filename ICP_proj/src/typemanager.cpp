@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Basic block type values
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ *
+ */
+
 #include "typemanager.h"
 
 #include <iostream>

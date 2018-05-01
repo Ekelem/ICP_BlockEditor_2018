@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief This file contains the root window
+ *
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
@@ -5,7 +12,9 @@
 #include <QList>
 #include <QDebug>
 
-
+/**
+ *  @brief MainWindow::MainWindow Constructor which creates main view
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,12 +30,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->main_field->mark_project(actual_project_m);
 }
 
+/**
+ * @brief MainWindow::~MainWindow destructor
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
     delete actual_project_m;
 }
 
+/**
+ * @brief MainWindow::on_actionNew_File_triggered Create a new file for editing
+ */
 void MainWindow::on_actionNew_File_triggered()
 {
     QList<Block_UI *>list = ui->main_field->findChildren<Block_UI *>();
@@ -36,6 +51,10 @@ void MainWindow::on_actionNew_File_triggered()
     }
 }
 
+/**
+ * @brief MainWindow::on_actionLoad_File_triggered Opens an existing file for editing/executing
+ * @note If the file is invalid(syntactically invalid) creates a new empty file
+ */
 void MainWindow::on_actionLoad_File_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Address Book"), "", tr("Block Editor (*.be2018);;All Files (*)"));
@@ -85,6 +104,9 @@ void MainWindow::on_actionLoad_File_triggered()
 }
 
 
+/**
+ * @brief MainWindow::on_actionSave_File_triggered Saves the actual state of the editor
+ */
 void MainWindow::on_actionSave_File_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -122,6 +144,10 @@ void MainWindow::on_actionSave_File_triggered()
 }
 
 
+/**
+ * @brief MainWindow::on_actionQuit_triggered Exit
+ *
+ */
 void MainWindow::on_actionQuit_triggered()
 {
     QMessageBox::StandardButton reply;
@@ -144,7 +170,9 @@ void MainWindow::on_actionQuit_triggered()
     }
 }
 
-
+/**
+ * @brief MainWindow::keyPressEvent Delete block/signal
+ */
 void MainWindow::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Delete) {
         Block_UI *elem = (Block_UI *)ui->main_field->childAt(ui->main_field->blockRemovePos);

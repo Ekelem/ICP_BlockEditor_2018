@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief Basic class of a block-frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #ifndef BLOCK_UI_H
 #define BLOCK_UI_H
 

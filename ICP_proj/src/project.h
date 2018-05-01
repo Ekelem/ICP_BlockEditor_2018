@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Contains definitions of class project which maintains the backend part
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ *
+ */
+
 #ifndef PROJECT_H
 #define PROJECT_H
 

@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Basic class of a block-backend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "canvas_ui.h"
 
 Canvas_UI::Canvas_UI(QWidget *parent) : QWidget(parent)

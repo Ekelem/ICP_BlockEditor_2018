@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Basic class of a bunch of blokes-frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #include "blockpalette_ui.h"
 
 BlockPalette_UI::BlockPalette_UI(QWidget *parent) : QTreeWidget(parent)

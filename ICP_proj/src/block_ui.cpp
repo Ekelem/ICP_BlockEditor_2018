@@ -1,9 +1,16 @@
+/**
+ * @file
+ * @brief Basic class of a block-frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "block_ui.h"
 #include "canvas_ui.h"
 
 #include <iostream>
 #include <string>
-#include <QDebug>
 
 Block_UI::Block_UI(QWidget *parent, QString name) : QWidget(parent)
 {
@@ -57,7 +64,6 @@ void Block_UI::mouseMoveEvent(QMouseEvent *event)
 }
 
 void Block_UI::keyPressEvent(QKeyEvent *event){
-    qDebug() << "asd";
     if(event->key() == Qt::Key_Delete) {
         delete this;
     }

@@ -1,3 +1,12 @@
+/*!
+ * @file
+ * @brief Contains definitions of class project which maintains the backend part
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ *
+ */
+
+
 #include "project.h"
 
 project::project()

@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Macro for creating different types
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef BLOCK_TEMPLATES_H
 #define BLOCK_TEMPLATES_H
 

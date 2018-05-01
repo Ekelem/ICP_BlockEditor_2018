@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Basic class of a bunch of blokes-frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef BLOCKPALETTE_UI_H
 #define BLOCKPALETTE_UI_H
 

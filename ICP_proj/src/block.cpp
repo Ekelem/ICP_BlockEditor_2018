@@ -1,3 +1,9 @@
+/*!
+ * @file
+ * @brief Basic class of a block-backend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
 #include "block.h"
 
 void block::run() {}
