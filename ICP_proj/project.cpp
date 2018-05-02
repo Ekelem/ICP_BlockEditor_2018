@@ -6,6 +6,14 @@ project::project()
     type_lib = type_mgr();
 }
 
+project::~project()
+{
+    /*for (auto it = block_lib.begin(); it != block_lib.end(); it++)
+    {
+        delete *it;
+    }*/
+}
+
 type_mgr & project::get_type_lib()
 {
     return type_lib;

@@ -46,12 +46,34 @@ void block::set_in_port(unsigned int index, value_i & val)
     in_ports_m[index].attach(val);
 }
 
-void block::set_ui(Block_UI *new_ui)
+out_port *block::get_out_port(unsigned int index)
 {
-    ui = new_ui;
+    //TODO throw
+    return &out_ports_m.at(index);
 }
 
-value_t block::get_out_port(unsigned int index)
+in_port *block::get_in_port(unsigned int index)
+{
+    //TODO throw
+    return &in_ports_m.at(index);
+}
+
+unsigned int block::get_out_size()
+{
+    return out_ports_m.size();
+}
+
+unsigned int block::get_in_size()
+{
+    return in_ports_m.size();
+}
+
+unsigned int block::get_max_size()
+{
+    return (get_in_size() > get_out_size()) ? get_in_size() : get_out_size();
+}
+
+value_t block::get_out_port_value(unsigned int index)
 {
     if (index > out_ports_m.size())
         ;   //TODO: throw ex

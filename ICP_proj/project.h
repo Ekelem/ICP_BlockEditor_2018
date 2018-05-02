@@ -11,6 +11,7 @@ class project
 {
 public:
     project();
+    ~project();
     void run();
     void set_start(block * first);
     type_mgr & get_type_lib();

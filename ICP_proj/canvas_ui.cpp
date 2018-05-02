@@ -52,10 +52,9 @@ void Canvas_UI::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->text() == "Create Block")
     {
-        Block_UI * new_block = new Block_UI(this, event->mimeData()->data("block"));
         block * added = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+        Block_UI * new_block = new Block_UI(this, added, event->mimeData()->data("block"));
         actual_project_m->get_block_lib().push_back(added);
-        added->set_ui(new_block);
         new_block->move(event->pos());
         new_block->show();
     }

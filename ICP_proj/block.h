@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "typemanager.h"
-#include "block_ui.h"
 
 typedef double value_t;   //value has always type double
 
@@ -47,8 +46,12 @@ public:
     block() {instantiate(); call_next = nullptr;}
     ~block() {};
     void set_in_port(unsigned int index, value_i & val);
-    void set_ui(Block_UI * new_ui);
-    value_t get_out_port(unsigned int index);
+    out_port *get_out_port(unsigned int index);
+    in_port *get_in_port(unsigned int index);
+    unsigned int get_out_size();
+    unsigned int get_in_size();
+    unsigned int get_max_size();
+    value_t get_out_port_value(unsigned int index);
     block * get_sequence_succ();
     size_t get_id();
     virtual void run();
@@ -58,7 +61,6 @@ protected:
     std::vector<out_port> out_ports_m;
 private:
     size_t instance_id;
-    Block_UI * ui;
     void instantiate();
 };
 
