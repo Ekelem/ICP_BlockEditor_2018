@@ -49,6 +49,8 @@ void MainWindow::on_actionNew_File_triggered()
     foreach(Block_UI *elem, list) {
         delete elem;
     }
+
+    ui->main_field->clearBlock_id();
 }
 
 /**
@@ -64,12 +66,14 @@ void MainWindow::on_actionLoad_File_triggered()
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
         QMessageBox::information(0, "error", file.errorString());
+        return;
     }
 
     emit on_actionNew_File_triggered();
 
     QTextStream in(&file);
     loadMode mode = ADD_BLOCKS;
+    std::map<QString, int> max_values = { {"ADD", 0}, {"SUB", 0} };
 
     while(!in.atEnd()) {
         QString line = in.readLine();
@@ -89,17 +93,22 @@ void MainWindow::on_actionLoad_File_triggered()
                 pos.setX(lineList.at(0).toInt());
                 pos.setY(lineList.at(1).toInt());
                 new_block = new Block_UI(ui->main_field, lineList.at(2));
-
                 new_block->move(pos);
                 new_block->show();
+
+                // To ensure that each block has an unique ID after opening a saved file
+                QString key = lineList.at(2).left(3);
+                int value = lineList.at(2).mid(3).toInt();
+                if (value >= max_values[key])
+                    max_values[key] = value+1;
             }
             else {
                 //TODO - connections
             }
         }
-
     }
 
+    ui->main_field->setBlock_id(max_values);
     file.close();
 }
 
@@ -157,7 +166,6 @@ void MainWindow::on_actionQuit_triggered()
 
     if (reply == QMessageBox::Save) {
         emit on_actionSave_File_triggered();
-        QMessageBox::information(this, "Information", "Successfully saved...");
         close();
     }
     if (reply == QMessageBox::Discard)

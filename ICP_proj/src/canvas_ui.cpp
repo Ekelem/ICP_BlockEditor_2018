@@ -21,6 +21,18 @@ void Canvas_UI::mark_project(project *actual_project)
     actual_project_m = actual_project;
 }
 
+void Canvas_UI::setBlock_id(std::map<QString, int> new_block_id) {
+    for (std::map<QString, int>::iterator it=new_block_id.begin(); it!=new_block_id.end(); ++it) {
+        block_id[it->first] = it->second;
+    }
+}
+
+void Canvas_UI::clearBlock_id() {
+    for (std::map<QString, int>::iterator it=block_id.begin(); it!=block_id.end(); ++it) {
+        block_id[it->first] = 0;
+    }
+}
+
 void Canvas_UI::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -30,7 +42,7 @@ void Canvas_UI::paintEvent(QPaintEvent *)
     painter.setBrush(canvas);
     painter.drawRect(size);
 }
-#include <QDebug>
+
 void Canvas_UI::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -61,7 +73,9 @@ void Canvas_UI::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->text() == "Create Block")
     {
-        Block_UI * new_block = new Block_UI(this, event->mimeData()->data("block"));
+        QString name = event->mimeData()->data("block");
+        name += QString::number(block_id[event->mimeData()->data("block")]++);
+        Block_UI * new_block = new Block_UI(this, name);
         block * added = new b_add_kg_to_kg(actual_project_m->get_type_lib());
         actual_project_m->get_block_lib().push_back(added);
         added->set_ui(new_block);
