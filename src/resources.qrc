@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/icon-c++.svg</file>
+    </qresource>
+    <qresource prefix="/menubar">
+        <file>icons/save_file.png</file>
+        <file>icons/load_file.png</file>
+        <file>icons/new_file.ico</file>
+        <file>icons/exit.png</file>
+        <file>icons/help.png</file>
+        <file>icons/start_program.png</file>
+        <file>icons/restart_program.png</file>
+        <file>icons/next_block.png</file>
+        <file>icons/start_program2.png.png</file>
+    </qresource>
+</RCC>
