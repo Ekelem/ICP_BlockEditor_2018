@@ -1,14 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFileDialog>
-#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     actual_project_m = new project();
-    scene_m = new QGraphicsScene(this);
+    scene_m = new Scene_Graphics(this);
     scene_m->addItem(new Canvas_Graphics(nullptr, actual_project_m));
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
@@ -16,6 +14,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
     ui->canvas->setScene(scene_m);
+    ui->canvas->verticalScrollBar()->setSliderPosition(1);
+    ui->canvas->horizontalScrollBar()->setSliderDown(1);
+
+    block *ptr_start = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+    scene_m->start = new Start_Graphics(nullptr, ptr_start);
+    scene_m->addItem(scene_m->start);
+
+    block *ptr_end   = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+    scene_m->end = new End_Graphics(nullptr, ptr_end);
+    scene_m->addItem(scene_m->end);
+
 
     //block * ptr = new b_add_kg_to_kg(actual_project_m->get_type_lib());
     //scene_m->addWidget(new Block_UI(nullptr, ptr, "abc"));
@@ -47,6 +56,13 @@ void MainWindow::on_actionNew_File_triggered()
     }
 
     actual_project_m = new project();
+    block *ptr_start = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+    scene_m->start = new Start_Graphics(nullptr, ptr_start);
+    scene_m->addItem(scene_m->start);
+
+    block *ptr_end   = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+    scene_m->end = new End_Graphics(nullptr, ptr_end);
+    scene_m->addItem(scene_m->end);
 }
 
 
@@ -65,6 +81,7 @@ void MainWindow::on_actionLoad_File_triggered()
 
     emit on_actionNew_File_triggered();
 
+
     QTextStream in(&file);
     loadMode mode = ADD_BLOCKS;
     std::map<QString, int> max_values = { };
@@ -75,6 +92,12 @@ void MainWindow::on_actionLoad_File_triggered()
         }
         else if (line == "# CONNECTIONS") {
             mode = ADD_CONNECTIONS;
+        }
+        else if (line == "# START_BLOCK") {
+            mode = ADD_START;
+        }
+        else if (line == "# END_BLOCK") {
+            mode = ADD_END;
         }
         else {
             if (mode == ADD_BLOCKS) {
@@ -99,7 +122,7 @@ void MainWindow::on_actionLoad_File_triggered()
                 if (value >= max_values[key])
                     max_values[key] = value+1;
             }
-            else {
+            else if (mode == ADD_CONNECTIONS) {
                 QStringList lineList = line.split(" ");
                 if (lineList.count() != 8) {
                     qDebug() << "Parse error in load";
@@ -113,7 +136,30 @@ void MainWindow::on_actionLoad_File_triggered()
                 QPainterPath path = QPainterPath();
                 path.moveTo(point1);
                 path.cubicTo(point2.x(), point2.y(), point3.x(), point3.y(), point4.x(), point4.y());
-                QGraphicsPathItem * connection = scene_m->addPath(path, QPen(Qt::green, 3, Qt::SolidLine));
+                scene_m->addPath(path, QPen(Qt::green, 3, Qt::SolidLine));
+            }
+            else if (mode == ADD_START) {
+                QStringList lineList = line.split(" ");
+                QPoint pos = QPoint();
+                if (lineList.count() != 2)
+                    return;
+                pos.setX(lineList.at(0).toInt());
+                pos.setY(lineList.at(1).toInt());
+
+                scene_m->start->setPos(pos);
+            }
+            else if (mode == ADD_END) {
+                QStringList lineList = line.split(" ");
+                QPoint pos = QPoint();
+                if (lineList.count() != 2)
+                    return;
+                pos.setX(lineList.at(0).toInt());
+                pos.setY(lineList.at(1).toInt());
+
+                scene_m->end->setPos(pos);
+            }
+            else {
+                qDebug() << "Load file interesing item detected";
             }
         }
     }
@@ -159,6 +205,21 @@ void MainWindow::on_actionSave_File_triggered()
         }
     }
 
+
+    for (std::list<QGraphicsItem *>::iterator item = items.begin(); item != items.end(); ++item ) {
+        Start_Graphics *as_start = dynamic_cast<Start_Graphics *>(*item);
+        End_Graphics *as_end = dynamic_cast<End_Graphics *>(*item);
+        if (as_start) {
+            QPointF pos = (*item)->pos();
+            qDebug() << pos;
+            outStream << "# START_BLOCK\n" << pos.x() << " " << pos.y() << "\n";
+        }
+        else if (as_end) {
+            QPointF pos = (*item)->pos();
+            outStream << "# END_BLOCK\n" << pos.x() << " " << pos.y() << "\n";
+        }
+    }
+
     outStream << "# CONNECTIONS\n";
     for (std::list<QGraphicsItem *>::iterator item = items.begin(); item != items.end(); ++item ) {
         QGraphicsPathItem *as_connection = dynamic_cast<QGraphicsPathItem *>(*item);
@@ -194,8 +255,39 @@ void MainWindow::on_actionQuit_triggered()
     }
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_Delete) {
+Scene_Graphics::Scene_Graphics(QObject *parent) : QGraphicsScene(parent) {
 
+}
+
+void Scene_Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsScene::mousePressEvent(event);
+    if (event->button() == Qt::RightButton) {
+        QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
+        if ((dynamic_cast<Start_Graphics *>(item)) || (dynamic_cast<End_Graphics *>(item)) ) {
+            qDebug() << "You can t remove start or end";
+            return;
+        }
+        if ((dynamic_cast<Start_Graphics *>(item->parentItem())) || (dynamic_cast<End_Graphics *>(item->parentItem()))) {
+            qDebug() << "Descandant of start/end";
+            return;
+        }
+        if (!(dynamic_cast<In_Port_Graphics *>(item)) && !(dynamic_cast<Out_Port_Graphics *>(item)) && !(dynamic_cast<Block_Graphics *>(item)) && !(dynamic_cast<QGraphicsPathItem *>(item))) {
+            qDebug() << "INVALID";
+            return;
+        }
+
+        if (item) {
+            if ((dynamic_cast<In_Port_Graphics *>(item)) || (dynamic_cast<Out_Port_Graphics *>(item))) {
+                qDebug() << "TO PARENT";
+                item = item->parentItem();
+            }
+            foreach(QGraphicsItem *tmp, item->childItems()) {
+                qDebug() << "REM";
+                tmp->~QGraphicsItem();
+            }
+            item->~QGraphicsItem();
+        }
     }
 }
+
+

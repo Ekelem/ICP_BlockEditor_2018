@@ -46,8 +46,8 @@ public:
     QString get_name_m();
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
-    void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 private:
 
     void setup_block();
@@ -156,5 +156,41 @@ signals:
 
 public slots:
 };
+
+
+class Start_Graphics : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    explicit Start_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr);
+protected:
+      virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
+//    void mousePressEvent(QMouseEvent *event);
+//    void mouseMoveEvent(QMouseEvent *event);
+private:
+    void setup_block();
+    QPoint offset;
+    QString name_m;
+    block * reference_m;
+    unsigned int height_m;
+};
+
+class End_Graphics : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    explicit End_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr);
+protected:
+      virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
+//    void mousePressEvent(QMouseEvent *event);
+//    void mouseMoveEvent(QMouseEvent *event);
+private:
+    void setup_block();
+    QPoint offset;
+    QString name_m;
+    block * reference_m;
+    unsigned int height_m;
+};
+
 
 #endif // BLOCK_UI_H

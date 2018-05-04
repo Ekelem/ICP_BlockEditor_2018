@@ -4,15 +4,21 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <list>
+#include <QGraphicsItem>
+#include <QKeyEvent>
+#include <QList>
+
 #include "project.h"
 #include "block.h"
 #include "block_templates.h"
 #include "canvas_ui.h"
 
-#include <list>
-#include <QGraphicsItem>
+enum loadMode { ADD_BLOCKS, ADD_CONNECTIONS, ADD_START, ADD_END };
 
-enum loadMode { ADD_BLOCKS, ADD_CONNECTIONS };
+class Scene_Graphics;
 
 namespace Ui {
 class MainWindow;
@@ -27,7 +33,6 @@ public:
     ~MainWindow();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
 
 private slots:
     void on_actionNew_File_triggered();
@@ -37,7 +42,23 @@ private slots:
 private:
     Ui::MainWindow *ui;
     project * actual_project_m;
-    QGraphicsScene * scene_m;
+    Scene_Graphics * scene_m;
+};
+
+
+class Scene_Graphics : public QGraphicsScene {
+    Q_OBJECT
+public:
+    explicit Scene_Graphics(QObject *parent = 0);
+    enum CanvasMode {NoMode, SelectObject};
+    void setMode(CanvasMode mode);
+    Start_Graphics *start;
+    End_Graphics *end;
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+private:
+    CanvasMode sceneMode;
+    void makeItemsControllable(bool areControllable);
 };
 
 #endif // MAINWINDOW_H

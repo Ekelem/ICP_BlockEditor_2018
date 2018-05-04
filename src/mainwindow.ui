@@ -17,6 +17,9 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QGraphicsView" name="canvas">
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
       <property name="acceptDrops">
        <bool>true</bool>
       </property>

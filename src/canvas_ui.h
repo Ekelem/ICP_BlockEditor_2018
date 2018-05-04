@@ -13,6 +13,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <iostream> //debug
+#include <QHoverEvent>
 
 #include "block_ui.h"
 //#include "mainwindow.h"
@@ -79,7 +80,6 @@ protected:
     //void paintEvent(QPaintEvent *);
     /*void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);*/
-
 
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);

@@ -269,6 +269,10 @@ QString Block_Graphics::get_name_m() {
     return name_m;
 }
 
+void  Block_Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    qDebug() << "block_graphics";
+}
+
 void Block_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
@@ -439,3 +443,80 @@ void Out_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
     }
 }
 
+
+Start_Graphics::Start_Graphics(QGraphicsItem *parent, block * reference) {
+    height_m = UI_BLOCK_HEIGHT_BASE;
+    reference_m = reference;
+    this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
+    this->setFlag(QGraphicsWidget::ItemIsMovable);
+    this->setPos(100,300);
+    setup_block();
+}
+
+void Start_Graphics::setup_block()
+{
+    if (reference_m != nullptr) {
+        height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
+        this->resize(UI_BLOCK_WIDTH_BASE, height_m);
+        new Out_Port_Graphics(this, reference_m->get_out_port(0), 0);
+    }
+}
+
+void Start_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
+
+    QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+        linearGrad.setColorAt(0, Qt::white);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+
+    painter->setBrush(linearGrad);
+    painter->drawRoundedRect(size, 10.0, 10.0);
+    painter->setPen(Qt::black);
+    QFont sansFont("Helvetica [Cronyx]", 12);
+    painter->setFont(sansFont);
+    painter->drawText(size, Qt::AlignHCenter, "START");
+    painter->setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
+    painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
+}
+
+
+
+
+End_Graphics::End_Graphics(QGraphicsItem *parent, block * reference) {
+    height_m = UI_BLOCK_HEIGHT_BASE;
+    reference_m = reference;
+    this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
+    this->setFlag(QGraphicsWidget::ItemIsMovable);
+    this->setPos(1220,300);
+    setup_block();
+}
+
+void End_Graphics::setup_block()
+{
+    if (reference_m != nullptr) {
+        height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
+        this->resize(UI_BLOCK_WIDTH_BASE, height_m);
+        new In_Port_Graphics(this, reference_m->get_in_port(0), 0);
+    }
+}
+
+void End_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
+
+    QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+        linearGrad.setColorAt(0, Qt::white);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+
+    painter->setBrush(linearGrad);
+    painter->drawRoundedRect(size, 10.0, 10.0);
+    painter->setPen(Qt::black);
+    QFont sansFont("Helvetica [Cronyx]", 12);
+    painter->setFont(sansFont);
+    painter->drawText(size, Qt::AlignHCenter, "END");
+    painter->setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
+    painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
+}

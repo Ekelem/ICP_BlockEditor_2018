@@ -96,6 +96,7 @@ Canvas_Graphics::Canvas_Graphics(QGraphicsWidget *parent, project *reference) : 
     actual_project_m = reference;
 }
 
+
 void Canvas_Graphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData()->hasFormat("text/plain"))
@@ -119,7 +120,6 @@ void Canvas_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         new_block->show();
         new_block->setFlag(QGraphicsWidget::ItemIsMovable);
     }
-
 }
 
 void Canvas_Graphics::mark_project(project *actual_project)
