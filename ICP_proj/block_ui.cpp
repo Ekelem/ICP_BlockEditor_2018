@@ -228,14 +228,22 @@ void Block_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
 
     QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::green);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+    }
+    else
+    {
         linearGrad.setColorAt(0, Qt::white);
         linearGrad.setColorAt(0.5, Qt::gray);
         linearGrad.setColorAt(1, Qt::black);
+    }
 
     painter->setBrush(linearGrad);
     painter->drawRoundedRect(size, 10.0, 10.0);
 
-    //QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter->setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter->setFont(sansFont);
@@ -357,7 +365,7 @@ void In_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         Out_Port_Graphics * recieved = (*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()));
         if (recieved == nullptr)
             throw 1;
-        if (!this->is_free())
+        if (!this->is_free() || (this->reference_m->get_type() !=  recieved->get_reference()->get_type()))
         {
             //TODO
         }
@@ -375,7 +383,7 @@ void In_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void In_Port_Graphics::compute_color()
 {
-    QCryptographicHash hasher(QCryptographicHash::Sha1);//QColor(reference_m->get_type())
+    QCryptographicHash hasher(QCryptographicHash::Sha1);
     type_id_t id = reference_m->get_type();
     hasher.addData(QByteArray((const char*)&id, sizeof(type_id_t)));
     QByteArray res = hasher.result();
@@ -453,7 +461,7 @@ void Out_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         }
         else
         {
-            if (!recieved->is_free())
+            if (!recieved->is_free() || (recieved->access_backend()->get_type() != this->reference_m->get_type()))
             {
                 //TODO
             }

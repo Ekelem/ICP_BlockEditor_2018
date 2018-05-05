@@ -164,7 +164,6 @@ public:
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void moveEvent(QGraphicsSceneMoveEvent * event);
-    //void mousePressEvent(QMouseEvent *event);
     //void mouseMoveEvent(QMouseEvent *event);
 private:
     std::vector<In_Port_Graphics *> in_ports_m;
