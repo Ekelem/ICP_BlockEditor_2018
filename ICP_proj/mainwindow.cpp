@@ -8,13 +8,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     actual_project_m = new project();
+    scene_m = new QGraphicsScene(this);
+    scene_m->addItem(new Canvas_Graphics(nullptr, actual_project_m));
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icons/icon-c++.svg"));
 
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
+    ui->canvas->setScene(scene_m);
 
-    ui->main_field->mark_project(actual_project_m);
+    //block * ptr = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+    //scene_m->addWidget(new Block_UI(nullptr, ptr, "abc"));
+    QPainterPath path = QPainterPath();
+    path.cubicTo(20, 0, 30, 50, 50, 50);
+    QGraphicsPathItem * ptr = scene_m->addPath(path, QPen(Qt::green, 3, Qt::SolidLine), QBrush(Qt::black));
+    //ptr->setPath();
+
+
+    //ui->main_field->mark_project(actual_project_m);
 }
 
 MainWindow::~MainWindow()

@@ -31,6 +31,11 @@ value_t in_port::value()
     return value_m->value;
 }
 
+type_id_t in_port::get_type()
+{
+    return type_m;
+}
+
 void in_port::attach(value_i & out)
 {
     if (out.get_type() == type_m)

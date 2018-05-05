@@ -34,6 +34,7 @@ class in_port
 public:
     in_port(const type_id_t type);
     value_t value();
+    type_id_t get_type();
     void attach(value_i & out);
 private:
     type_id_t type_m;

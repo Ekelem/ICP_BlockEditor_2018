@@ -1,5 +1,5 @@
 #ifndef BLOCK_TEMPLATES_H
-#define BLOCK_TEMPLATES_H
+#define BLOCK_TEMPLATES_H 42
 
 #include "block.h"
 
@@ -19,7 +19,7 @@
         {                                                                           \
             out_ports_m[0].value = in_ports_m[0].value() + in_ports_m[1].value();   \
         }                                                                           \
-    }
+    }                                                                               \
 
 #define MAC_BLOCK_SUB_SAME(name, type)                                              \
     class name : public block                                                       \
@@ -52,7 +52,6 @@
             out_ports_m[0].value = in_ports_m[0].value() * in_ports_m[1].value();   \
         }                                                                           \
     }
-
 
 MAC_BLOCK_ADD_SAME(b_add_kg_to_kg, "kilogram");
 MAC_BLOCK_ADD_SAME(b_add_g_to_g, "gram");
