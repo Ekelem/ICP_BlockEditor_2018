@@ -23,6 +23,9 @@
 
 #include <QGraphicsSceneDragDropEvent>
 
+class Out_Port_Graphics;
+class In_Port_Graphics;
+
 class Canvas_SCENE : public QGraphicsScene
 {
     Q_OBJECT
@@ -67,7 +70,7 @@ signals:
 
 public slots:
 };
-
+enum CanvasMode { Arithmethics, Value, Start, End };
 class Canvas_Graphics : public QGraphicsWidget
 {
     Q_OBJECT
@@ -76,6 +79,9 @@ public:
     void mark_project(project * actual_project);
     void setBlock_id(std::map<QString, int> new_block_id);
     void clearBlock_id();
+    std::map<QString, int>get_block_id();
+    std::map<QString, int> block_id = {};
+
 protected:
     //void paintEvent(QPaintEvent *);
     /*void mousePressEvent(QMouseEvent *event);
@@ -88,7 +94,6 @@ protected:
 private:
     QPoint offset;
     project * actual_project_m;
-    std::map<QString, int> block_id = {};
 
 signals:
 

@@ -1,4 +1,5 @@
 #include "blockpalette_ui.h"
+#include "mainwindow.h"
 
 BlockPalette_UI::BlockPalette_UI(QWidget *parent) : QTreeWidget(parent)
 {
@@ -21,6 +22,47 @@ void BlockPalette_UI::create_default()
 
     QTreeWidgetItem *conversion = new QTreeWidgetItem(this);
     conversion->setText(0, tr("Conversion"));
+
+
+    QHBoxLayout *mid = new QHBoxLayout(this);
+    QLabel *label1 = new QLabel();
+    label1->setMaximumSize(70,30);
+    label1->setText("Value:");
+    QLabel *label2 = new QLabel();
+    label2->setText("in");
+    label2->setMaximumSize(70,30);
+    QLineEdit *value1 = new QLineEdit();
+    value1->setObjectName("value");
+    value1->setMaximumWidth(80);
+    QLineEdit *value2 = new QLineEdit();
+    value2->setMaximumWidth(80);
+    value2->setObjectName("type");
+
+
+
+//    QFrame * p1 = dynamic_cast<QFrame *>(this->parent());
+//    if (p1) {
+//        qDebug() << "1";
+//        QWidget *p2 = dynamic_cast<QWidget *>(p1->parent());
+//        if (p2) {
+//            qDebug() << "2";
+//            QDockWidget *p3 = (QDockWidget *)(p2->topLevelWidget());
+//            if (p3) {
+//                qDebug() << "3";
+//                QMainWindow *p4 = (QMainWindow *)(p3->topLevelWidget());
+//                if (p4) {
+//                    qDebug() << "ASD";
+//                    MainWindow *p5 = (MainWindow *)(p4);
+//                    emit p5->on_actionLoad_File_triggered();
+//                }
+//            }
+//        }
+//    }
+
+    mid->addWidget(label1);
+    mid->addWidget(value1);
+    mid->addWidget(label2);
+    mid->addWidget(value2);
 }
 
 void BlockPalette_UI::create_default_aritmetic(QTreeWidgetItem *aritmetic)

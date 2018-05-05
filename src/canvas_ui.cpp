@@ -152,3 +152,7 @@ void Canvas_Graphics::clearBlock_id() {
         block_id[it->first] = 0;
     }
 }
+
+std::map<QString, int> Canvas_Graphics::get_block_id() {
+    return block_id;
+}

@@ -59,7 +59,7 @@
     </property>
     <addaction name="actionNew_File"/>
     <addaction name="actionSave_File"/>
-    <addaction name="actionLoad_File"/>
+    <addaction name="actionLoad"/>
     <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFIle"/>
@@ -186,18 +186,6 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionLoad_File">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/menubar/icons/load_file.png</normaloff>:/menubar/icons/load_file.png</iconset>
-   </property>
-   <property name="text">
-    <string>Load File</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="resources.qrc">
@@ -256,6 +244,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/menubar/icons/load_file.png</normaloff>:/menubar/icons/load_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

@@ -9,8 +9,16 @@
 #include <QMimeData>
 #include <QString>
 #include <QDrag>
+#include <QLineEdit>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGraphicsView>
+#include <QDebug>
+#include <QDockWidget>
 
 #include <iostream>
+
+#include "canvas_ui.h"
 
 class BlockPalette_UI : public QTreeWidget
 {

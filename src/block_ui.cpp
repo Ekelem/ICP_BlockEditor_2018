@@ -1,4 +1,6 @@
 #include "block_ui.h"
+#include "canvas_ui.h"
+#include "mainwindow.h"
 
 #include <iostream>
 #include <string>
@@ -269,9 +271,6 @@ QString Block_Graphics::get_name_m() {
     return name_m;
 }
 
-void  Block_Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    qDebug() << "block_graphics";
-}
 
 void Block_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -323,10 +322,16 @@ void In_Port_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->drawEllipse({16, 16}, 16, 16);
 }
 
+
 void In_Port_Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton) {
         offset = event->pos();
+
+        Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
+        sc->temporary_in = this;
+
+    }
 }
 
 void In_Port_Graphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -431,6 +436,12 @@ void Out_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         }
         else
         {
+            Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
+            sc->temporary_in->out_port_pointer = this;
+            this->in_port_pointers.push_back(sc->temporary_in);
+
+            sc->temporary_in = nullptr;
+
             //recieved->access_backend();
             //recieved->access_backend()->attach(*reference_m);    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
             //TODO draw cubic bezier
@@ -519,4 +530,70 @@ void End_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawText(size, Qt::AlignHCenter, "END");
     painter->setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
     painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Value_Graphics::Value_Graphics(QGraphicsItem *parent, block *reference, QString name, QString value) : QGraphicsWidget(parent)
+{
+    height_m = UI_BLOCK_HEIGHT_BASE;
+    name_m = name;
+    value_m = value;
+    reference_m = reference;
+    this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
+    setup_block();
+}
+
+QString Value_Graphics::get_name_m() {
+    return name_m;
+}
+
+
+void Value_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
+
+    QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+        linearGrad.setColorAt(0, Qt::white);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+
+    painter->setBrush(linearGrad);
+    painter->drawRoundedRect(size, 10.0, 10.0);
+
+    //QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    painter->setPen(Qt::black);
+    QFont sansFont("Helvetica [Cronyx]", 12);
+    painter->setFont(sansFont);
+    painter->drawText(size, Qt::AlignHCenter, name_m);
+    painter->drawText(size, Qt::AlignCenter, value_m);
+    painter->setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
+    painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
+}
+
+void Value_Graphics::setup_block()
+{
+    if (reference_m != nullptr)
+    {
+        height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
+        this->resize(UI_BLOCK_WIDTH_BASE, height_m);
+        new In_Port_Graphics(this, reference_m->get_in_port(0), 0);
+        new Out_Port_Graphics(this, reference_m->get_out_port(0), 0);
+    }
 }

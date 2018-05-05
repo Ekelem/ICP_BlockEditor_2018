@@ -11,14 +11,20 @@
 #include <QGraphicsWidget>
 #include <QGraphicsScene>
 #include <QGraphicsSceneEvent>
+#include <list>
+#include <QDebug>
 
 #include "block.h"
+#include "canvas_ui.h"
 
 #define UI_BLOCK_HEADER_LINE_OFFSET 30
 #define UI_BLOCK_WIDTH_BASE 120
 #define UI_BLOCK_HEIGHT_BASE 40
 
 #include <QDebug>
+
+class In_Port_Graphics;
+class Out_Port_Graphics;
 
 class Block_UI : public QWidget
 {
@@ -47,9 +53,7 @@ public:
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 private:
-
     void setup_block();
     QPoint offset;
     QString name_m;
@@ -84,6 +88,7 @@ class In_Port_Graphics : public QGraphicsWidget
 public:
     explicit In_Port_Graphics(QGraphicsItem *parent = nullptr, in_port * reference = nullptr, unsigned int index = 0);
     in_port * access_backend();
+    Out_Port_Graphics * out_port_pointer = nullptr;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -125,11 +130,11 @@ class Out_Port_Graphics : public QGraphicsWidget
 public:
     explicit Out_Port_Graphics(QGraphicsItem *parent = nullptr, out_port * reference = nullptr, unsigned int index = 0);
     out_port *get_reference();
+    std::list<In_Port_Graphics *>in_port_pointers;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 private:
@@ -184,6 +189,25 @@ protected:
       virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
 //    void mousePressEvent(QMouseEvent *event);
 //    void mouseMoveEvent(QMouseEvent *event);
+private:
+    void setup_block();
+    QPoint offset;
+    QString name_m;
+    block * reference_m;
+    unsigned int height_m;
+};
+
+
+class Value_Graphics : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    explicit Value_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr, QString name = "Name", QString value = "");
+    QString get_name_m();
+    QString value_m;
+protected:
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
+    void mouseMoveEvent(QMouseEvent *event);
 private:
     void setup_block();
     QPoint offset;
