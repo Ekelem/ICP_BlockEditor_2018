@@ -67,8 +67,9 @@ void BlockPalette_UI::create_default()
 
 void BlockPalette_UI::create_default_aritmetic(QTreeWidgetItem *aritmetic)
 {
-    create_unit(aritmetic, "ADD");
-    create_unit(aritmetic, "SUB");
+    create_unit(aritmetic, "b_add_kg_to_kg");
+    create_unit(aritmetic, "b_add_g_to_g");
+    create_unit(aritmetic, "b_add_mg_to_mg");
 }
 
 BlockName_UI::BlockName_UI(QWidget *parent, QString name) : QLabel(name, parent)

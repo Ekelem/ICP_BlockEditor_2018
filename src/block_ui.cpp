@@ -88,6 +88,7 @@ in_port *In_Port_UI::access_backend()
     return reference_m;
 }
 
+
 void In_Port_UI::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -140,6 +141,19 @@ void In_Port_UI::dropEvent(QDropEvent *event)
     }
 }
 
+out_port *Out_Port_Graphics::get_reference()
+{
+    return reference_m;
+}
+
+void Out_Port_Graphics::moved()
+{
+    for (auto itr = connections_m.begin(); itr != connections_m.end(); itr++)
+    {
+        (*itr)->alter_path(0, this->scenePos());
+    }
+}
+
 Out_Port_UI::Out_Port_UI(QWidget *parent, out_port *reference, unsigned int index) : QWidget(parent)
 {
     reference_m = reference;
@@ -148,10 +162,7 @@ Out_Port_UI::Out_Port_UI(QWidget *parent, out_port *reference, unsigned int inde
     setAcceptDrops(true);
 }
 
-out_port *Out_Port_Graphics::get_reference()
-{
-    return reference_m;
-}
+
 
 void Out_Port_UI::paintEvent(QPaintEvent *)
 {
@@ -210,7 +221,7 @@ void Out_Port_UI::dropEvent(QDropEvent *event)
             recieved->access_backend();
             recieved->access_backend()->attach(*reference_m);    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
             //TODO draw cubic bezier
-            new Node_UI((QWidget*)this->parent()->parent(), recieved, this);
+            //new Node_UI((QWidget*)this->parent()->parent(), recieved, this);
         }
     }
 }
@@ -277,14 +288,22 @@ void Block_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
 
     QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::green);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+    }
+    else
+    {
         linearGrad.setColorAt(0, Qt::white);
         linearGrad.setColorAt(0.5, Qt::gray);
         linearGrad.setColorAt(1, Qt::black);
+    }
 
     painter->setBrush(linearGrad);
     painter->drawRoundedRect(size, 10.0, 10.0);
 
-    //QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter->setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter->setFont(sansFont);
@@ -301,24 +320,63 @@ void Block_Graphics::setup_block()
         this->resize(UI_BLOCK_WIDTH_BASE, height_m);
 
         for (unsigned int i = 0; i < reference_m->get_in_size(); i++)   //visualize in_ports
-            new In_Port_Graphics(this, reference_m->get_in_port(i), i);
+            in_ports_m.push_back(new In_Port_Graphics(this, reference_m->get_in_port(i), i));
 
         for (unsigned int i = 0; i < reference_m->get_out_size(); i++)   //visualize out_ports
-            new Out_Port_Graphics(this, reference_m->get_out_port(i), i);
+            out_ports_m.push_back(new Out_Port_Graphics(this, reference_m->get_out_port(i), i));
     }
 }
+
+void Block_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
+{
+    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
+    {
+        if (in_ports_m.size() > i)      //just for sure
+            in_ports_m[i]->moved();
+    }
+
+    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
+    {
+        if (out_ports_m.size() > i)     //just for sure
+            out_ports_m[i]->moved();
+    }
+}
+
 
 In_Port_Graphics::In_Port_Graphics(QGraphicsItem *parent, in_port *reference, unsigned int index) : QGraphicsWidget(parent)
 {
     reference_m = reference;
+    connection_m = nullptr;
+    this->compute_color();
     this->resize(UI_BLOCK_HEIGHT_BASE, UI_BLOCK_HEIGHT_BASE);
     this->setPos(-10, UI_BLOCK_HEIGHT_BASE * (index+1));
     setAcceptDrops(true);
 }
 
+in_port *In_Port_Graphics::access_backend()
+{
+    return reference_m;
+}
+
+bool In_Port_Graphics::is_free()
+{
+    return connection_m == nullptr ? true : false;
+}
+
+void In_Port_Graphics::attach(Node_Graphics *node)
+{
+    connection_m = node;
+}
+
+void In_Port_Graphics::moved()
+{
+    if (connection_m != nullptr)
+        connection_m->alter_path(this->scenePos());
+}
+
 void In_Port_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(Qt::gray);
+    painter->setBrush(color_m);
     painter->drawEllipse({16, 16}, 16, 16);
 }
 
@@ -368,24 +426,54 @@ void In_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData()->text() == "Connect from out")
     {
-        reference_m->attach(*(*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()))->get_reference());    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
+        Out_Port_Graphics * recieved = (*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()));
+        if (recieved == nullptr)
+            throw 1;
+        if (!this->is_free() || (this->reference_m->get_type() !=  recieved->get_reference()->get_type()))
+        {
+            //TODO
+        }
+        else
+        {
+            reference_m->attach(*(recieved->get_reference()));
+            Node_Graphics * node = new Node_Graphics(this->scene(), this->scenePos(), recieved->scenePos());
+            this->attach(node);
+            recieved->attach(node);
+        }
+        //reference_m->attach(*(*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()))->get_reference());    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
         //TODO draw cubic bezier
     }
 }
 
+void In_Port_Graphics::compute_color()
+{
+    QCryptographicHash hasher(QCryptographicHash::Sha1);
+    type_id_t id = reference_m->get_type();
+    hasher.addData(QByteArray((const char*)&id, sizeof(type_id_t)));
+    QByteArray res = hasher.result();
+    color_m = QColor(abs(static_cast<int>(*(res.data()))), abs(static_cast<int>(*(res.data()+8))), abs(static_cast<int>(*(res.data()+16))));
+}
 
 
 Out_Port_Graphics::Out_Port_Graphics(QGraphicsItem *parent, out_port *reference, unsigned int index) : QGraphicsWidget(parent)
 {
     reference_m = reference;
+    compute_color();
     this->resize(UI_BLOCK_HEIGHT_BASE, UI_BLOCK_HEIGHT_BASE);
     this->setPos(UI_BLOCK_WIDTH_BASE - 24, UI_BLOCK_HEIGHT_BASE * (index+1));
     setAcceptDrops(true);
 }
 
+
+void Out_Port_Graphics::attach(Node_Graphics *node)
+{
+    connections_m.push_back(node);
+    //&(*(--connections_m.end()))
+}
+
 void Out_Port_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(Qt::gray);
+    painter->setBrush(color_m);
     painter->drawEllipse({16, 16}, 16, 16);
 }
 
@@ -436,22 +524,81 @@ void Out_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         }
         else
         {
-            Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
-            sc->temporary_in->out_port_pointer = this;
-            this->in_port_pointers.push_back(sc->temporary_in);
+            if (!recieved->is_free() || (recieved->access_backend()->get_type() != this->reference_m->get_type()))
+            {
+                //TODO
+            }
+            else {
+                recieved->access_backend()->attach(*reference_m);
+                Node_Graphics * node = new Node_Graphics(this->scene(), recieved->scenePos(), this->scenePos());
+                recieved->attach(node);
+                connections_m.push_back(node);
+                Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
+                sc->temporary_in->out_port_pointer = this;
+                this->in_port_pointers.push_back(sc->temporary_in);
 
-            sc->temporary_in = nullptr;
+                sc->temporary_in = nullptr;
+            }
+
 
             //recieved->access_backend();
             //recieved->access_backend()->attach(*reference_m);    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
             //TODO draw cubic bezier
-            QPainterPath path = QPainterPath();
-            QPoint start = QPoint(recieved->scenePos().x() + 16, recieved->scenePos().y() + 16);
-            path.moveTo(start);
-            path.cubicTo(recieved->scenePos().x() - 200, recieved->scenePos().y(), this->scenePos().x() + 200, this->scenePos().y(), this->scenePos().x() + 16, this->scenePos().y() + 16);
-            QGraphicsPathItem * connection = this->scene()->addPath(path, QPen(Qt::green, 3, Qt::SolidLine));
+//            QPainterPath path = QPainterPath();
+//            QPoint start = QPoint(recieved->scenePos().x() + 16, recieved->scenePos().y() + 16);
+//            path.moveTo(start);
+//            path.cubicTo(recieved->scenePos().x() - 200, recieved->scenePos().y(), this->scenePos().x() + 200, this->scenePos().y(), this->scenePos().x() + 16, this->scenePos().y() + 16);
+//            QGraphicsPathItem * connection = this->scene()->addPath(path, QPen(Qt::green, 3, Qt::SolidLine));
         }
     }
+}
+
+void Out_Port_Graphics::compute_color()
+{
+    QCryptographicHash hasher(QCryptographicHash::Sha1);//QColor(reference_m->get_type())
+    type_id_t id = reference_m->get_type();
+    hasher.addData(QByteArray((const char*)&id, sizeof(type_id_t)));
+    QByteArray res = hasher.result();
+    color_m = QColor(abs(static_cast<int>(*(res.data()))), abs(static_cast<int>(*(res.data()+8))), abs(static_cast<int>(*(res.data()+16))));
+}
+
+Node_Graphics::Node_Graphics(QGraphicsScene *parent, QPointF start, QPointF end, Node_Graphics **reference_in, Node_Graphics **reference_out)
+{
+    path_m = new QPainterPath();
+    alter_path(start, end);
+    reference_m = parent->addPath(*path_m, QPen(Qt::green, 3, Qt::SolidLine));
+}
+
+void Node_Graphics::alter_path(QPointF start, QPointF end)
+{
+    start_m = QPoint(start.x() + 16, start.y() + 16);   // in port + circle radius
+    end_m = QPoint(end.x() + 16, end.y() + 16); //out_port + circle radius
+    path_m->moveTo(start_m);
+    int divider = start_m.x() > end_m.x() ? 2 : 1;
+    int length = (start_m - end_m).manhattanLength() / divider;
+    path_m->cubicTo(start_m.x() - length, start_m.y(), end_m.x() + length, end_m.y(), end_m.x(), end_m.y());
+}
+
+void Node_Graphics::alter_path(QPointF start)
+{
+    start_m = QPoint(start.x() + 16, start.y() + 16);   // in port + circle radius
+    *path_m = QPainterPath();
+    path_m->moveTo(start_m);
+    int divider = start_m.x() > end_m.x() ? 2 : 1;
+    int length = (start_m - end_m).manhattanLength() / divider;
+    path_m->cubicTo(start_m.x() - length, start_m.y(), end_m.x() + length, end_m.y(), end_m.x(), end_m.y());
+    reference_m->setPath(*path_m);
+}
+
+void Node_Graphics::alter_path(int padding, QPointF end)
+{
+    end_m = QPoint(end.x() + 16, end.y() + 16); //out_port + circle radius
+    *path_m = QPainterPath();
+    path_m->moveTo(start_m);
+    int divider = start_m.x() > end_m.x() ? 2 : 1;
+    int length = (start_m - end_m).manhattanLength() / divider;
+    path_m->cubicTo(start_m.x() - length, start_m.y(), end_m.x() + length, end_m.y(), end_m.x(), end_m.y());
+    reference_m->setPath(*path_m);
 }
 
 
@@ -459,7 +606,8 @@ Start_Graphics::Start_Graphics(QGraphicsItem *parent, block * reference) {
     height_m = UI_BLOCK_HEIGHT_BASE;
     reference_m = reference;
     this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
-    this->setFlag(QGraphicsWidget::ItemIsMovable);
+    setFlag(QGraphicsWidget::ItemIsMovable);
+    setFlag(QGraphicsWidget::ItemIsSelectable);
     this->setPos(100,300);
     setup_block();
 }
@@ -469,7 +617,22 @@ void Start_Graphics::setup_block()
     if (reference_m != nullptr) {
         height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
         this->resize(UI_BLOCK_WIDTH_BASE, height_m);
-        new Out_Port_Graphics(this, reference_m->get_out_port(0), 0);
+        out_ports_m.push_back(new Out_Port_Graphics(this, reference_m->get_out_port(0), 0));
+    }
+}
+
+void Start_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
+{
+    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
+    {
+        if (in_ports_m.size() > i)      //just for sure
+            in_ports_m[i]->moved();
+    }
+
+    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
+    {
+        if (out_ports_m.size() > i)     //just for sure
+            out_ports_m[i]->moved();
     }
 }
 
@@ -478,12 +641,22 @@ void Start_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
 
     QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::green);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+    }
+    else
+    {
         linearGrad.setColorAt(0, Qt::white);
         linearGrad.setColorAt(0.5, Qt::gray);
         linearGrad.setColorAt(1, Qt::black);
+    }
 
     painter->setBrush(linearGrad);
     painter->drawRoundedRect(size, 10.0, 10.0);
+
     painter->setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter->setFont(sansFont);
@@ -493,23 +666,24 @@ void Start_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 }
 
 
-
-
 End_Graphics::End_Graphics(QGraphicsItem *parent, block * reference) {
     height_m = UI_BLOCK_HEIGHT_BASE;
     reference_m = reference;
     this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
-    this->setFlag(QGraphicsWidget::ItemIsMovable);
+    setFlag(QGraphicsWidget::ItemIsMovable);
+    setFlag(QGraphicsWidget::ItemIsSelectable);
     this->setPos(1220,300);
     setup_block();
 }
 
 void End_Graphics::setup_block()
 {
-    if (reference_m != nullptr) {
+    if (reference_m != nullptr)
+    {
         height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
         this->resize(UI_BLOCK_WIDTH_BASE, height_m);
-        new In_Port_Graphics(this, reference_m->get_in_port(0), 0);
+
+        in_ports_m.push_back(new In_Port_Graphics(this, reference_m->get_in_port(0), 0));
     }
 }
 
@@ -518,12 +692,22 @@ void End_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
 
     QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::green);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+    }
+    else
+    {
         linearGrad.setColorAt(0, Qt::white);
         linearGrad.setColorAt(0.5, Qt::gray);
         linearGrad.setColorAt(1, Qt::black);
+    }
 
     painter->setBrush(linearGrad);
     painter->drawRoundedRect(size, 10.0, 10.0);
+
     painter->setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter->setFont(sansFont);
@@ -532,22 +716,20 @@ void End_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
 }
 
+void End_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
+{
+    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
+    {
+        if (in_ports_m.size() > i)      //just for sure
+            in_ports_m[i]->moved();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
+    {
+        if (out_ports_m.size() > i)     //just for sure
+            out_ports_m[i]->moved();
+    }
+}
 
 
 Value_Graphics::Value_Graphics(QGraphicsItem *parent, block *reference, QString name, QString value) : QGraphicsWidget(parent)
@@ -558,6 +740,8 @@ Value_Graphics::Value_Graphics(QGraphicsItem *parent, block *reference, QString 
     reference_m = reference;
     this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
     setup_block();
+    setFlag(QGraphicsWidget::ItemIsMovable);
+    setFlag(QGraphicsWidget::ItemIsSelectable);
 }
 
 QString Value_Graphics::get_name_m() {
@@ -570,14 +754,22 @@ void Value_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, height_m);
 
     QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE*2, height_m*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::green);
+        linearGrad.setColorAt(0.5, Qt::gray);
+        linearGrad.setColorAt(1, Qt::black);
+    }
+    else
+    {
         linearGrad.setColorAt(0, Qt::white);
         linearGrad.setColorAt(0.5, Qt::gray);
         linearGrad.setColorAt(1, Qt::black);
+    }
 
     painter->setBrush(linearGrad);
     painter->drawRoundedRect(size, 10.0, 10.0);
 
-    //QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter->setPen(Qt::black);
     QFont sansFont("Helvetica [Cronyx]", 12);
     painter->setFont(sansFont);
@@ -593,7 +785,22 @@ void Value_Graphics::setup_block()
     {
         height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
         this->resize(UI_BLOCK_WIDTH_BASE, height_m);
-        new In_Port_Graphics(this, reference_m->get_in_port(0), 0);
-        new Out_Port_Graphics(this, reference_m->get_out_port(0), 0);
+        in_ports_m.push_back(new In_Port_Graphics(this, reference_m->get_in_port(0), 0));
+        out_ports_m.push_back(new Out_Port_Graphics(this, reference_m->get_out_port(0), 0));
+    }
+}
+
+void Value_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
+{
+    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
+    {
+        if (in_ports_m.size() > i)      //just for sure
+            in_ports_m[i]->moved();
+    }
+
+    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
+    {
+        if (out_ports_m.size() > i)     //just for sure
+            out_ports_m[i]->moved();
     }
 }

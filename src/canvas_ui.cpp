@@ -54,7 +54,7 @@ void Canvas_UI::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->text() == "Create Block")
     {
-        block * added = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+        block * added = actual_project_m->add_block(event->mimeData()->data("block").data());//new b_add_kg_to_kg(actual_project_m->get_type_lib());
         Block_UI * new_block = new Block_UI(this, added, event->mimeData()->data("block"));
         actual_project_m->get_block_lib().push_back(added);
         new_block->move(event->pos());
@@ -112,13 +112,14 @@ void Canvas_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
     {
         QString name = event->mimeData()->data("block");
         name += QString::number(block_id[event->mimeData()->data("block")]++);
-        block * added = new b_add_kg_to_kg(actual_project_m->get_type_lib());
+        block * added = actual_project_m->add_block(event->mimeData()->data("block").data());
         Block_Graphics * new_block = new Block_Graphics(this, added, name);
         actual_project_m->get_block_lib().push_back(added);
         //new_block->move(event->pos());
         new_block->setPos(event->pos());
         new_block->show();
         new_block->setFlag(QGraphicsWidget::ItemIsMovable);
+        new_block->setFlag(QGraphicsWidget::ItemIsSelectable);
     }
 }
 

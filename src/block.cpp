@@ -7,6 +7,11 @@ type_id_t value_i::get_type()
     return type_m;
 }
 
+type_id_t in_port::get_type()
+{
+    return type_m;
+}
+
 out_port::out_port(const type_id_t type)
 {
     value = 0.0;
