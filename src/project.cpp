@@ -12,14 +12,16 @@ project::project()
     start = nullptr;
     type_lib = type_mgr();
     setup_palette();
+    running_m = false;
+    break_block = nullptr;
 }
 
 project::~project()
 {
-    /*for (auto it = block_lib.begin(); it != block_lib.end(); it++)
+    for (auto it = block_lib.begin(); it != block_lib.end(); it++)
     {
         delete *it;
-    }*/
+    }
 }
 
 void project::setup_palette()
@@ -72,6 +74,11 @@ block *project::add_block(std::string name)
     return block_palette.at(name)(type_lib);
 }
 
+void project::force_stop()
+{
+    running_m = false;
+}
+
 type_mgr & project::get_type_lib()
 {
     return type_lib;
@@ -82,19 +89,65 @@ std::list<block*> & project::get_block_lib()
     return block_lib;
 }
 
+void project::reset()
+{
+    for (auto itr = block_lib.begin(); itr != block_lib.end(); itr++)
+    {
+        for (unsigned int i = 0; i < (*itr)->get_out_size(); i++)
+            (*itr)->get_out_port(i)->reset();
+    }
+}
+
 void project::run()
 {
-    if (check_cycles())
-        throw exceptions_enum::cycle;
-    if (check_inputs())
-        throw exceptions_enum::unconnected_in;
-
     block * next;
-    next = start;
+    if (!running_m)
+    {
+        next = start;
+        running_m = true;
+        reset();
+        if (check_cycles())
+            throw exceptions_enum::cycle;
+        if (check_inputs())
+            throw exceptions_enum::unconnected_in;
+    }
+    else
+    {
+        next = break_block;
+    }
+
     while (next != nullptr)
     {
         next->run();
         next = next->get_sequence_succ();
+    }
+    running_m = false;
+}
+
+void project::step()
+{
+    if (running_m)
+    {
+        block * next = break_block;
+        if (next != nullptr)
+        {
+            next->run();
+            break_block = next->get_sequence_succ();
+        }
+        else
+            running_m = false;
+    }
+    else
+    {
+        block * next = start;
+        if (next != nullptr)
+        {
+            running_m = true;
+            next->run();
+            break_block = next->get_sequence_succ();
+        }
+        else
+            running_m = false;
     }
 }
 

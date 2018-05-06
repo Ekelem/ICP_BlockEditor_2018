@@ -30,28 +30,6 @@
 
 #include <QGraphicsSceneDragDropEvent>
 
-class Canvas_SCENE : public QGraphicsScene
-{
-    Q_OBJECT
-public:
-    explicit Canvas_SCENE(QObject *parent = nullptr);
-protected:
-    //void paintEvent(QPaintEvent *);
-    /*void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);*/
-
-    /*void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-    void dropEvent(QGraphicsSceneDragDropEvent *event);
-    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);*/
-
-private:
-    project * actual_project_m;
-
-signals:
-
-public slots:
-};
-
 class Canvas_UI : public QWidget
 {
     Q_OBJECT
@@ -80,12 +58,10 @@ class Canvas_Graphics : public QGraphicsWidget
     Q_OBJECT
 public:
     explicit Canvas_Graphics(QGraphicsItem *parent = nullptr, project * reference = nullptr);
+    ~Canvas_Graphics();
     void mark_project(project * actual_project);
+    void update();
 protected:
-    //void paintEvent(QPaintEvent *);
-    /*void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);*/
-
 
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
@@ -94,6 +70,7 @@ protected:
 private:
     QPoint offset;
     project * actual_project_m;
+    std::list<Block_Graphics *> blocks_ui;
 
 signals:
 

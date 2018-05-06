@@ -20,6 +20,7 @@ public:
     ~value_i() {};  //implicit destructor
     value_t value;
     type_id_t get_type();
+    void reset();
 protected:
     type_id_t type_m;
 };

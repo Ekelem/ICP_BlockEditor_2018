@@ -27,7 +27,10 @@ public:
     ~project();
     void setup_palette();
     block * add_block(std::string name);
+    void reset();
+    void force_stop();
     void run();
+    void step();
     void set_start(block * first);
     block ** get_start_addr();
     type_mgr & get_type_lib();
@@ -37,7 +40,9 @@ private:
     std::list<block*> block_lib;
     std::map<std::string, block * (*)(type_mgr)> block_palette;
     block * start;
+    block * break_block;
 
+    bool running_m;
     bool check_cycles();
     bool check_inputs();
 };

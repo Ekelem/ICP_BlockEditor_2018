@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     actual_project_m = new project();
     scene_m = new QGraphicsScene(this);
-    scene_m->addItem(new Canvas_Graphics(nullptr, actual_project_m));
+    canvas_m = new Canvas_Graphics(nullptr, actual_project_m);
+    scene_m->addItem(canvas_m);
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icons/icon-c++.svg"));
@@ -37,6 +38,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete actual_project_m;
+    delete canvas_m;
 }
 
 void MainWindow::on_actionNew_File_triggered()
@@ -96,6 +98,7 @@ void MainWindow::on_actionRun_program_triggered()
     }
     catch(exceptions_enum e)
     {
+        actual_project_m->force_stop();
         QMessageBox msgBox;
         switch (e) {
         case cycle:
@@ -110,6 +113,7 @@ void MainWindow::on_actionRun_program_triggered()
             break;
         }
     }
+    canvas_m->update();
 }
 
 /**
@@ -132,4 +136,43 @@ void MainWindow::on_constantButton_clicked()
         scene_m->addItem(new_constant);
         new_constant->setPos(mapToParent(QPoint(START_POINT_X, START_POINT_Y)));
     }
+}
+
+void MainWindow::on_actionNext_step_triggered()
+{
+    try
+    {
+        actual_project_m->step();
+        QMessageBox msgBox;
+        msgBox.setText("Step succesful!");
+        msgBox.exec();
+    }
+    catch(exceptions_enum e)
+    {
+        actual_project_m->force_stop();
+        QMessageBox msgBox;
+        switch (e) {
+        case cycle:
+            msgBox.setText("Cycle detected!");
+            msgBox.exec();
+            break;
+        case unconnected_in:
+            msgBox.setText("Unconnected in port detected!");
+            msgBox.exec();
+            break;
+        default:
+            break;
+        }
+    }
+    canvas_m->update();
+}
+
+void MainWindow::on_actionRestart_program_triggered()
+{
+    actual_project_m->reset();
+    canvas_m->update();
+
+    QMessageBox msgBox;
+    msgBox.setText("Reset succesful!");
+    msgBox.exec();
 }

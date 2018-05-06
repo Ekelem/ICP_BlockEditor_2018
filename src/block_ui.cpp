@@ -163,6 +163,11 @@ void Out_Port_Graphics::moved()
     }
 }
 
+void Out_Port_Graphics::update()
+{
+    this->setToolTip(QString::number(reference_m->value));
+}
+
 void Out_Port_UI::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -233,6 +238,21 @@ Block_Graphics::Block_Graphics(QGraphicsItem *parent, block *reference, QString 
     reference_m = reference;
     this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
     setup_block();
+}
+
+void Block_Graphics::update()
+{
+    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
+    {
+        if (in_ports_m.size() > i)      //just for sure
+            in_ports_m[i]->update();
+    }
+
+    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
+    {
+        if (out_ports_m.size() > i)     //just for sure
+            out_ports_m[i]->update();
+    }
 }
 
 void Block_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -317,6 +337,7 @@ In_Port_Graphics::In_Port_Graphics(QGraphicsItem *parent, in_port *reference, un
     this->resize(UI_BLOCK_HEIGHT_BASE, UI_BLOCK_HEIGHT_BASE);
     this->setPos(-10, UI_BLOCK_HEIGHT_BASE * (index+1));
     setAcceptDrops(true);
+    update();
 }
 
 in_port *In_Port_Graphics::access_backend()
@@ -344,6 +365,13 @@ void In_Port_Graphics::moved()
 {
     if (connection_m != nullptr)
         connection_m->alter_path(this->scenePos());
+}
+
+void In_Port_Graphics::update()
+{
+    if (!reference_m->is_free())
+        this->setToolTip(QString::number(reference_m->value()));
+    //if (connection_m->reference_m->setToo)
 }
 
 Node_Graphics **In_Port_Graphics::get_connection()
@@ -417,6 +445,7 @@ void In_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
             Node_Graphics * node = new Node_Graphics(this->scene(), this->scenePos(), recieved->scenePos(), &this->connection_m, recieved->get_connect_list());
             this->attach(node);
             recieved->attach(node);
+            this->update();
         }
         //reference_m->attach(*(*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()))->get_reference());    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
         //TODO draw cubic bezier
@@ -441,6 +470,7 @@ Out_Port_Graphics::Out_Port_Graphics(QGraphicsItem *parent, value_i *reference, 
     this->resize(UI_BLOCK_HEIGHT_BASE, UI_BLOCK_HEIGHT_BASE);
     this->setPos(UI_BLOCK_WIDTH_BASE - 24, UI_BLOCK_HEIGHT_BASE * (index+1));
     setAcceptDrops(true);
+    update();
 }
 
 void Out_Port_Graphics::attach(Node_Graphics *node)
@@ -517,6 +547,7 @@ void Out_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
                 recieved->access_backend()->attach(*reference_m);
                 Node_Graphics * node = new Node_Graphics(this->scene(), recieved->scenePos(), this->scenePos(), recieved->get_connection(), this->get_connect_list());
                 recieved->attach(node);
+                recieved->update();
                 connections_m.push_back(node);
             }
         }

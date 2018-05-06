@@ -36,10 +36,15 @@ private slots:
     void on_actionRun_program_triggered();
     void on_constantButton_clicked();
 
+    void on_actionNext_step_triggered();
+
+    void on_actionRestart_program_triggered();
+
 private:
     Ui::MainWindow *ui;
     project * actual_project_m;
     QGraphicsScene * scene_m;
+    Canvas_Graphics * canvas_m;
 };
 
 #endif // MAINWINDOW_H

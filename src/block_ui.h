@@ -126,6 +126,7 @@ public:
     bool is_free();
     void attach(Node_Graphics * node);
     void moved();
+    void update();
     Node_Graphics **get_connection();
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
@@ -155,6 +156,7 @@ public:
     value_i *get_reference();
     std::list<Node_Graphics *> *get_connect_list();
     void moved();
+    void update();
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -276,6 +278,7 @@ class Block_Graphics : public QGraphicsWidget
     Q_OBJECT
 public:
     explicit Block_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr, QString name = "Name");
+    void update();
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void moveEvent(QGraphicsSceneMoveEvent * event);

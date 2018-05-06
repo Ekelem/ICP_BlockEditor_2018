@@ -44,7 +44,7 @@ void Canvas_UI::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->text() == "Create Block")
     {
-        block * added = actual_project_m->add_block(event->mimeData()->data("block").data());//new b_add_kg_to_kg(actual_project_m->get_type_lib());
+        block * added = actual_project_m->add_block(event->mimeData()->data("block").data());
         Block_UI * new_block = new Block_UI(this, added, event->mimeData()->data("block"));
         actual_project_m->get_block_lib().push_back(added);
         new_block->move(event->pos());
@@ -60,9 +60,14 @@ Canvas_Graphics::Canvas_Graphics(QGraphicsItem *parent, project *reference) : QG
     actual_project_m = reference;
 }
 
+Canvas_Graphics::~Canvas_Graphics()
+{
+    for (auto itr = blocks_ui.begin(); itr != blocks_ui.end(); itr++)
+        delete (*itr);
+}
+
 void Canvas_Graphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-    std::cerr << "canvas dragenter" << std::endl;
     if (event->mimeData()->hasFormat("text/plain"))
     {
         event->setAccepted(true);
@@ -77,6 +82,7 @@ void Canvas_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         block * added = actual_project_m->add_block(event->mimeData()->data("block").data());
         Block_Graphics * new_block = new Block_Graphics(this, added, event->mimeData()->data("block"));
         actual_project_m->get_block_lib().push_back(added);
+        blocks_ui.push_back(new_block);
         new_block->setPos(event->pos());
         new_block->show();
         new_block->setFlag(QGraphicsWidget::ItemIsMovable);
@@ -93,6 +99,12 @@ void Canvas_Graphics::mark_project(project *actual_project)
         throw 25; //TODO
 
     actual_project_m = actual_project;
+}
+
+void Canvas_Graphics::update()
+{
+    for (auto itr = blocks_ui.begin(); itr != blocks_ui.end(); itr++)
+        (*itr)->update();
 }
 
 void Canvas_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
