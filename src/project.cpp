@@ -67,9 +67,8 @@ block *project::add_block(std::string name)
 {
     if ( block_palette.find(name) == block_palette.end() )
     {
-        std::cerr << "not found " << name << std::endl;
+        throw exceptions_enum::block_not_exists;
     }
-    std::cerr << "found " << name << std::endl;
     return block_palette.at(name)(type_lib);
 }
 
@@ -109,7 +108,6 @@ bool project::check_cycles()
     {
         for (auto i = ids.begin(); i != ids.end(); i++)
         {
-            std::cerr << *i << std::endl;
             if (*i == next->get_id())
                 return true;
         }

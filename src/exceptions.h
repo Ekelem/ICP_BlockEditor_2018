@@ -11,7 +11,8 @@
 enum exceptions_enum {
     cycle,
     unconnected_in,
-    not_a_number
+    not_a_number,
+    block_not_exists
 };
 
 #endif // EXCEPTIONS_H

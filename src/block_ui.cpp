@@ -200,7 +200,6 @@ void Out_Port_UI::mouseMoveEvent(QMouseEvent *event)
 
 void Out_Port_UI::dragEnterEvent(QDragEnterEvent *event)
 {
-    std::cerr << "out dragenter" << std::endl;
     if (event->mimeData()->hasFormat("text/plain"))
     {
         event->acceptProposedAction();
@@ -304,7 +303,6 @@ void Block_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
 
 void Block_Graphics::keyPressEvent(QKeyEvent *event)
 {
-    std::cerr << "NOW" << std::endl;
     if (event->key() == Qt::Key_Delete)
     {
         this->scene()->removeItem(this);
@@ -389,7 +387,6 @@ void In_Port_Graphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void In_Port_Graphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-    std::cerr << "in_port dragenter" << std::endl;
     if (event->mimeData()->hasFormat("text/plain"))
     {
         event->acceptProposedAction();
@@ -488,7 +485,6 @@ void Out_Port_Graphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Out_Port_Graphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-    std::cerr << "out_port dragenter" << std::endl;
     if (event->mimeData()->hasFormat("text/plain"))
     {
         event->acceptProposedAction();
@@ -844,7 +840,7 @@ void Out_Exec_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
 Start_Graphics::Start_Graphics(QGraphicsItem *parent, block **reference)
 {
     this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE);
-    this->setPos(500, 1000);
+    this->setPos(START_POINT_X, START_POINT_Y);
     reference_m = reference;
     in_exec_m = new In_Exec_Graphics(this, reference);
     in_exec_m->setPos(UI_BLOCK_WIDTH_BASE/2 - 20, 0);

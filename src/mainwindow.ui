@@ -184,7 +184,7 @@
                  </size>
                 </property>
                 <property name="placeholderText">
-                 <string>0.0</string>
+                 <string/>
                 </property>
                </widget>
               </item>

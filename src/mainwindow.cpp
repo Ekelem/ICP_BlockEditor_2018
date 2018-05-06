@@ -118,11 +118,18 @@ void MainWindow::on_actionRun_program_triggered()
  */
 void MainWindow::on_constantButton_clicked()
 {
-    //Constant_Graphics()
     bool number = false;
-    std::cerr << ui->constantValue->toPlainText().toStdString() << std::endl;
     double value = ui->constantValue->toPlainText().toDouble(&number);
     if (!number)
-        throw exceptions_enum::not_a_number;
-    scene_m->addItem(new Constant_Graphics(nullptr, value, ui->comboBoxTypes->currentIndex(), ui->comboBoxTypes->currentText().toStdString()));
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Constant Value must be number!");
+        msgBox.exec();
+    }
+    else
+    {
+        QGraphicsItem * new_constant = new Constant_Graphics(nullptr, value, ui->comboBoxTypes->currentIndex(), ui->comboBoxTypes->currentText().toStdString());
+        scene_m->addItem(new_constant);
+        new_constant->setPos(mapToParent(QPoint(START_POINT_X, START_POINT_Y)));
+    }
 }

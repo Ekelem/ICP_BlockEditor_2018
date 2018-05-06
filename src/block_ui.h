@@ -25,6 +25,8 @@
 
 #include "block.h"
 
+#define START_POINT_X 600
+#define START_POINT_Y 800
 #define UI_BLOCK_HEADER_LINE_OFFSET 30
 #define UI_BLOCK_WIDTH_BASE 180
 #define UI_BLOCK_HEIGHT_BASE 40

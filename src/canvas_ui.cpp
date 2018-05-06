@@ -32,26 +32,8 @@ void Canvas_UI::paintEvent(QPaintEvent *)
     painter.drawRect(size);
 }
 
-/*void Canvas_UI::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-        //offset = mapToParent(event->pos());
-        offset = event->pos();
-}
-
-void Canvas_UI::mouseMoveEvent(QMouseEvent *event)
-{
-    if(event->buttons() & Qt::LeftButton)
-    {
-        QPoint diff = mapToParent(event->pos() - offset);
-        //int old = this->pos().x();
-        this->move(diff);
-    }
-}*/
-
 void Canvas_UI::dragEnterEvent(QDragEnterEvent *event)
 {
-    std::cerr << "canvas dragenter" << std::endl;
     if (event->mimeData()->hasFormat("text/plain"))
     {
         event->acceptProposedAction();
@@ -70,32 +52,6 @@ void Canvas_UI::dropEvent(QDropEvent *event)
     }
 }
 
-Canvas_SCENE::Canvas_SCENE(QObject *parent) : QGraphicsScene(parent)
-{
-
-}
-
-/*void Canvas_SCENE::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    std::cerr << "scene dragenter" << std::endl;
-    if (event->mimeData()->hasFormat("text/plain"))
-    {
-        event->setAccepted(true);
-        event->acceptProposedAction();
-    }
-}
-
-void Canvas_SCENE::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-    std::cerr << "scene drag!!!" << std::endl;
-    //((QWidget*)focusItem())->dropEvent(event);
-
-}
-
-void Canvas_SCENE::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    //event->acceptProposedAction();
-}*/
 
 Canvas_Graphics::Canvas_Graphics(QGraphicsItem *parent, project *reference) : QGraphicsWidget(parent)
 {

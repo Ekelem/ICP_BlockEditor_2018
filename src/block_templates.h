@@ -104,7 +104,7 @@ MAC_BLOCK_SUB_SAME(b_sub_lb_from_lb, "pound");
 
 MAC_BLOCK_MUL(b_mul_kg, "kilogram");
 MAC_BLOCK_MUL(b_mul_g, "gram");
-MAC_BLOCK_MUL(b_mul_mg, "miligramgram");
+MAC_BLOCK_MUL(b_mul_mg, "miligram");
 MAC_BLOCK_MUL(b_mul_t, "ton");
 MAC_BLOCK_MUL(b_mul_lb, "pound");
 
