@@ -439,6 +439,13 @@ void In_Port_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
             Node_Graphics * node = new Node_Graphics(this->scene(), this->scenePos(), recieved->scenePos());
             this->attach(node);
             recieved->attach(node);
+
+            Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
+            sc->temporary_out->in_port_pointers.push_back(this);
+            this->out_port_pointer = sc->temporary_out;
+
+            sc->temporary_out = nullptr;
+
         }
         //reference_m->attach(*(*reinterpret_cast<Out_Port_Graphics**>(event->mimeData()->data("out_port").data()))->get_reference());    //in mime_data is stored pointer(8 bytes) on out_port, so pointer on data is pointer on pointer..
         //TODO draw cubic bezier
@@ -479,8 +486,11 @@ void Out_Port_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
 void Out_Port_Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton) {
         offset = event->pos();
+        Scene_Graphics *sc = (Scene_Graphics *)(this->scene());
+        sc->temporary_out = this;
+    }
 }
 
 void Out_Port_Graphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -723,12 +733,6 @@ void End_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
         if (in_ports_m.size() > i)      //just for sure
             in_ports_m[i]->moved();
     }
-
-    for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
-    {
-        if (out_ports_m.size() > i)     //just for sure
-            out_ports_m[i]->moved();
-    }
 }
 
 
@@ -785,19 +789,12 @@ void Value_Graphics::setup_block()
     {
         height_m = (reference_m->get_max_size()+1) * UI_BLOCK_HEIGHT_BASE;
         this->resize(UI_BLOCK_WIDTH_BASE, height_m);
-        in_ports_m.push_back(new In_Port_Graphics(this, reference_m->get_in_port(0), 0));
         out_ports_m.push_back(new Out_Port_Graphics(this, reference_m->get_out_port(0), 0));
     }
 }
 
 void Value_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
 {
-    for (unsigned int i = 0; i < reference_m->get_in_size(); i++)
-    {
-        if (in_ports_m.size() > i)      //just for sure
-            in_ports_m[i]->moved();
-    }
-
     for (unsigned int i = 0; i < reference_m->get_out_size(); i++)
     {
         if (out_ports_m.size() > i)     //just for sure

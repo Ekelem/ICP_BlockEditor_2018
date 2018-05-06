@@ -63,6 +63,8 @@ class Block_Graphics : public QGraphicsWidget
 public:
     explicit Block_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr, QString name = "Name");
     QString get_name_m();
+    std::vector<In_Port_Graphics *> in_ports_m;
+    std::vector<Out_Port_Graphics *> out_ports_m;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
 //    void mouseMoveEvent(QMouseEvent *event);
@@ -73,8 +75,7 @@ private:
     QString name_m;
     block * reference_m;
     unsigned int height_m;
-    std::vector<In_Port_Graphics *> in_ports_m;
-    std::vector<Out_Port_Graphics *> out_ports_m;
+
 };
 
 class In_Port_UI : public QWidget
@@ -108,6 +109,7 @@ public:
     bool is_free();
     void attach(Node_Graphics * node);
     void moved();
+    in_port * reference_m;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -117,7 +119,6 @@ protected:
     virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 private:
     QPointF offset;
-    in_port * reference_m;
     void compute_color();
     QColor color_m;
     Node_Graphics * connection_m;
@@ -155,7 +156,7 @@ public:
     std::list<In_Port_Graphics *>in_port_pointers;
     void moved();
     void attach(Node_Graphics * node);
-
+    std::list<Node_Graphics *> connections_m;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -167,7 +168,6 @@ private:
     out_port * reference_m;
     void compute_color();
     QColor color_m;
-    std::list<Node_Graphics *> connections_m;
 signals:
 
 public slots:
@@ -196,6 +196,9 @@ class Start_Graphics : public QGraphicsWidget
     Q_OBJECT
 public:
     explicit Start_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr);
+    QString name_m = "START";
+    std::vector<In_Port_Graphics *> in_ports_m;
+    std::vector<Out_Port_Graphics *> out_ports_m;
 protected:
       virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
       virtual void moveEvent(QGraphicsSceneMoveEvent * event);
@@ -204,11 +207,8 @@ protected:
 private:
     void setup_block();
     QPoint offset;
-    QString name_m;
     block * reference_m;
     unsigned int height_m;
-    std::vector<In_Port_Graphics *> in_ports_m;
-    std::vector<Out_Port_Graphics *> out_ports_m;
 };
 
 class End_Graphics : public QGraphicsWidget
@@ -216,6 +216,8 @@ class End_Graphics : public QGraphicsWidget
     Q_OBJECT
 public:
     explicit End_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr);
+    QString name_m = "END";
+    std::vector<In_Port_Graphics *> in_ports_m;
 protected:
       virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
       virtual void moveEvent(QGraphicsSceneMoveEvent * event);
@@ -224,11 +226,8 @@ protected:
 private:
     void setup_block();
     QPoint offset;
-    QString name_m;
     block * reference_m;
     unsigned int height_m;
-    std::vector<In_Port_Graphics *> in_ports_m;
-    std::vector<Out_Port_Graphics *> out_ports_m;
 };
 
 
@@ -239,6 +238,7 @@ public:
     explicit Value_Graphics(QGraphicsItem *parent = nullptr, block * reference = nullptr, QString name = "Name", QString value = "");
     QString get_name_m();
     QString value_m;
+    std::vector<Out_Port_Graphics *> out_ports_m;
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
     virtual void moveEvent(QGraphicsSceneMoveEvent * event);
@@ -248,8 +248,6 @@ private:
     QString name_m;
     block * reference_m;
     unsigned int height_m;
-    std::vector<In_Port_Graphics *> in_ports_m;
-    std::vector<Out_Port_Graphics *> out_ports_m;
 };
 
 

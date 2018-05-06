@@ -38,27 +38,6 @@ void BlockPalette_UI::create_default()
     value2->setMaximumWidth(80);
     value2->setObjectName("type");
 
-
-
-//    QFrame * p1 = dynamic_cast<QFrame *>(this->parent());
-//    if (p1) {
-//        qDebug() << "1";
-//        QWidget *p2 = dynamic_cast<QWidget *>(p1->parent());
-//        if (p2) {
-//            qDebug() << "2";
-//            QDockWidget *p3 = (QDockWidget *)(p2->topLevelWidget());
-//            if (p3) {
-//                qDebug() << "3";
-//                QMainWindow *p4 = (QMainWindow *)(p3->topLevelWidget());
-//                if (p4) {
-//                    qDebug() << "ASD";
-//                    MainWindow *p5 = (MainWindow *)(p4);
-//                    emit p5->on_actionLoad_File_triggered();
-//                }
-//            }
-//        }
-//    }
-
     mid->addWidget(label1);
     mid->addWidget(value1);
     mid->addWidget(label2);
