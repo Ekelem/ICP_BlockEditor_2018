@@ -51,6 +51,8 @@ void project::setup_palette()
     MAC_ADD_TO_PALETTE("b_conv_t_to_nthg", b_conv_t_to_nthg);
     MAC_ADD_TO_PALETTE("b_conv_lb_to_nthg", b_conv_lb_to_nthg);
 
+    MAC_ADD_TO_PALETTE("b_output", b_output);
+
 
 }
 
@@ -120,6 +122,7 @@ bool project::check_inputs()
             if (next->get_in_port(i)->is_free())
                 return true;
         }
+        next = next->get_sequence_succ();
     }
     return false;
 }

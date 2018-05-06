@@ -14,6 +14,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icons/icon-c++.svg"));
 
+    for (unsigned int i = 0; i < actual_project_m->get_type_lib().get_type_count(); i++)
+    {
+        ui->comboBoxTypes->addItem(QString::fromStdString(actual_project_m->get_type_lib().get_type_name(i)));
+    }
+
     scene_m->addItem(new Start_Graphics(nullptr, actual_project_m->get_start_addr()));
 
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
@@ -108,4 +113,15 @@ void MainWindow::on_actionRun_program_triggered()
             break;
         }
     }
+}
+
+void MainWindow::on_constantButton_clicked()
+{
+    //Constant_Graphics()
+    bool number = false;
+    std::cerr << ui->constantValue->toPlainText().toStdString() << std::endl;
+    double value = ui->constantValue->toPlainText().toDouble(&number);
+    if (!number)
+        throw exceptions_enum::not_a_number;
+    scene_m->addItem(new Constant_Graphics(nullptr, value, ui->comboBoxTypes->currentIndex(), ui->comboBoxTypes->currentText().toStdString()));
 }

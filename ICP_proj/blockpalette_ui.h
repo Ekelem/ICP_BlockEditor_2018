@@ -22,6 +22,7 @@ private:
     void create_default();
     void create_default_aritmetic(QTreeWidgetItem * parent);
     void create_default_conversion(QTreeWidgetItem * parent);
+    void create_default_extra(QTreeWidgetItem * parent);
 };
 
 class BlockName_UI : public QLabel

@@ -31,6 +31,8 @@ private slots:
 
     void on_actionRun_program_triggered();
 
+    void on_constantButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     project * actual_project_m;

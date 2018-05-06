@@ -137,7 +137,7 @@ Out_Port_UI::Out_Port_UI(QWidget *parent, out_port *reference, unsigned int inde
     setAcceptDrops(true);
 }
 
-out_port *Out_Port_Graphics::get_reference()
+value_i *Out_Port_Graphics::get_reference()
 {
     return reference_m;
 }
@@ -429,7 +429,7 @@ void In_Port_Graphics::compute_color()
 
 
 
-Out_Port_Graphics::Out_Port_Graphics(QGraphicsItem *parent, out_port *reference, unsigned int index) : QGraphicsWidget(parent)
+Out_Port_Graphics::Out_Port_Graphics(QGraphicsItem *parent, value_i *reference, unsigned int index) : QGraphicsWidget(parent)
 {
     reference_m = reference;
     compute_color();
@@ -872,3 +872,52 @@ void Start_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 }
 
 
+
+Constant_Graphics::Constant_Graphics(QGraphicsItem *parent, value_t value, type_id_t type_id, std::string name) : QGraphicsWidget(parent)
+{
+    reference_m = new constant(type_id, value);
+    name_m = (QString::number(value) + " " + QString::fromStdString(name)).toStdString();
+    this->resize(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE*2);
+    this->setFlag(QGraphicsWidget::ItemIsMovable);
+    this->setFlag(QGraphicsWidget::ItemIsSelectable);
+    this->setFlag(QGraphicsWidget::ItemIsFocusable);
+    out_port_m = new Out_Port_Graphics(this, reference_m, 0);
+}
+
+Constant_Graphics::~Constant_Graphics()
+{
+    delete reference_m;
+}
+
+void Constant_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QRect size = QRect(0 , 0 , UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE*2);
+
+    QLinearGradient linearGrad(0 , 0 , UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEIGHT_BASE*2);
+    if (this->isSelected())
+    {
+        linearGrad.setColorAt(0, Qt::white);
+        linearGrad.setColorAt(0.5, Qt::green);
+        linearGrad.setColorAt(1, Qt::gray);
+    }
+    else
+    {
+        linearGrad.setColorAt(0, Qt::white);
+        linearGrad.setColorAt(1, Qt::gray);
+    }
+
+    painter->setBrush(linearGrad);
+    painter->drawRoundedRect(size, 10.0, 10.0);
+
+    painter->setPen(Qt::black);
+    QFont sansFont("Helvetica [Cronyx]", 12);
+    painter->setFont(sansFont);
+    painter->drawText(size, Qt::AlignHCenter, QString::fromStdString(name_m));
+    painter->setPen(QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap));
+    painter->drawLine(QPoint(0, UI_BLOCK_HEADER_LINE_OFFSET), QPoint(UI_BLOCK_WIDTH_BASE, UI_BLOCK_HEADER_LINE_OFFSET));
+}
+
+void Constant_Graphics::moveEvent(QGraphicsSceneMoveEvent *event)
+{
+    out_port_m->moved();
+}

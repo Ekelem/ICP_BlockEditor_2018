@@ -111,10 +111,8 @@ void Canvas_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
     if (event->mimeData()->text() == "Create Block")
     {
         block * added = actual_project_m->add_block(event->mimeData()->data("block").data());
-        std::cerr << added->get_out_port(0)->get_type() << std::endl;
         Block_Graphics * new_block = new Block_Graphics(this, added, event->mimeData()->data("block"));
         actual_project_m->get_block_lib().push_back(added);
-        //new_block->move(event->pos());
         new_block->setPos(event->pos());
         new_block->show();
         new_block->setFlag(QGraphicsWidget::ItemIsMovable);
@@ -140,4 +138,7 @@ void Canvas_Graphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     canvas.setMatrix(QMatrix().scale(2.0, 2.0));
     painter->setBrush(canvas);
     painter->drawRect(size);
+
+    (void)option;   //dont really need it
+    (void)widget;   //dont really need it
 }

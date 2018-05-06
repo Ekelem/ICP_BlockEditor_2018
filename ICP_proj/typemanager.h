@@ -13,6 +13,8 @@ public:
     void create_type(std::string type_name);
     void insert_type(std::string type_name, type_id_t id);
     type_id_t get_type_id(std::string type_name);
+    unsigned int get_type_count();
+    std::string get_type_name(unsigned int index);
 
     void debug();
 

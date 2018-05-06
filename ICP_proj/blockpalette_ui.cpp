@@ -23,6 +23,11 @@ void BlockPalette_UI::create_default()
     conversion->setText(0, tr("Conversion"));
 
     create_default_conversion(conversion);
+
+    QTreeWidgetItem *extra = new QTreeWidgetItem(this);
+    extra->setText(0, tr("Extra"));
+
+    create_default_extra(extra);
 }
 
 void BlockPalette_UI::create_default_aritmetic(QTreeWidgetItem *parent)
@@ -63,6 +68,11 @@ void BlockPalette_UI::create_default_conversion(QTreeWidgetItem *parent)
     create_unit(parent, "b_conv_mg_to_nthg");
     create_unit(parent, "b_conv_t_to_nthg");
     create_unit(parent, "b_conv_lb_to_nthg");
+}
+
+void BlockPalette_UI::create_default_extra(QTreeWidgetItem *parent)
+{
+    create_unit(parent, "b_output");
 }
 
 BlockName_UI::BlockName_UI(QWidget *parent, QString name) : QLabel(name, parent)

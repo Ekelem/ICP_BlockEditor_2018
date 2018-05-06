@@ -140,9 +140,9 @@ class Out_Port_Graphics : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    explicit Out_Port_Graphics(QGraphicsItem *parent = nullptr, out_port * reference = nullptr, unsigned int index = 0);
+    explicit Out_Port_Graphics(QGraphicsItem *parent = nullptr, value_i * reference = nullptr, unsigned int index = 0);
     void attach(Node_Graphics * node);
-    out_port *get_reference();
+    value_i *get_reference();
     std::list<Node_Graphics *> *get_connect_list();
     void moved();
 protected:
@@ -157,7 +157,7 @@ private:
     QColor color_m;
     std::list<Node_Graphics *> connections_m;
     QPointF offset;
-    out_port * reference_m;
+    value_i * reference_m;
 signals:
 
 public slots:
@@ -298,6 +298,24 @@ private:
     In_Exec_Graphics * in_exec_m;
     void setup_block();
     block ** reference_m;
+signals:
+
+public slots:
+};
+
+class Constant_Graphics : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    explicit Constant_Graphics(QGraphicsItem *parent = nullptr, value_t value = 0.0, type_id_t type_id = 0, std::string name = "typeless");
+    ~Constant_Graphics();
+protected:
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option , QWidget *widget);
+    virtual void moveEvent(QGraphicsSceneMoveEvent * event);
+private:
+    Out_Port_Graphics * out_port_m;
+    value_i * reference_m;
+    std::string name_m;
 signals:
 
 public slots:

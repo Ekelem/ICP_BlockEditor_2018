@@ -33,6 +33,16 @@ type_id_t type_mgr::get_type_id(std::string type_name)
     throw 25;
 }
 
+unsigned int type_mgr::get_type_count()
+{
+    return type_lib.size();
+}
+
+std::string type_mgr::get_type_name(unsigned int index)
+{
+    return type_lib.at(index);
+}
+
 bool type_mgr::type_already_exists(std::string type_name)
 {
     for (auto i = type_lib.begin(); i != type_lib.end(); i++)
