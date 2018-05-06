@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief This file contains the main window
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -22,15 +30,10 @@ public:
 
 private slots:
     void on_actionNew_File_triggered();
-
     void on_actionLoad_File_triggered();
-
     void on_actionSave_File_triggered();
-
     void on_actionQuit_triggered();
-
     void on_actionRun_program_triggered();
-
     void on_constantButton_clicked();
 
 private:

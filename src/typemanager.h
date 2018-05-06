@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Type attributes
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef TYPEMANAGER_H
 #define TYPEMANAGER_H
 

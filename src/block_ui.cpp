@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief This file contains the UI of each block
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "block_ui.h"
 
 #include <iostream>

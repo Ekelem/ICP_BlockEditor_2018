@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Catching expression in the Main Program
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 

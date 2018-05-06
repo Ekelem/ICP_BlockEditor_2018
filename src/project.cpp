@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief Project class merges backend with frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #include "project.h"
 
 project::project()

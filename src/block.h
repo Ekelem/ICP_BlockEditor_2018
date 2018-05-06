@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief This file contains the backend part of each block
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #ifndef BLOCK_H
 #define BLOCK_H
 

@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Canvas which contains the BlockEditor2018 scene
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #ifndef CANVAS_UI_H
 #define CANVAS_UI_H
 

@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Basic palette at the side panel
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "blockpalette_ui.h"
 
 BlockPalette_UI::BlockPalette_UI(QWidget *parent) : QTreeWidget(parent)

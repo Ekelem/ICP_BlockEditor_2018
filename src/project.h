@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief Project class merges backend with frontend
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
+
 #ifndef PROJECT_H
 #define PROJECT_H
 

@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief This file contains basic attributes of each block type type
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
 #include "typemanager.h"
 
 #include <iostream>

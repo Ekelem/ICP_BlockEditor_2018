@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief This file contains the basic canvas used by the editor
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ */
+
+
 #include "canvas_ui.h"
 
 Canvas_UI::Canvas_UI(QWidget *parent) : QWidget(parent)

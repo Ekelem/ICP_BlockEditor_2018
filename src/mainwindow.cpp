@@ -1,3 +1,11 @@
+/*!
+ * @file
+ * @brief This file contains the basic window definition
+ *
+ * @author Erik Kelemen, xkelem01@stud.fit.vutbr.cz
+ * @author Attila Lakatos, xlakat01@stud.fit.vutbr.cz
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
@@ -31,21 +39,12 @@ MainWindow::~MainWindow()
     delete actual_project_m;
 }
 
-/*
- * Event for New File
- * Question: Should ask for saving the actual state?
- */
 void MainWindow::on_actionNew_File_triggered()
 {
 
 }
 
 
-/*
- * Event for Load File
- * Question: Should ask for saving the actual state?
- * Question: Where should save all the data from the file?
- */
 void MainWindow::on_actionLoad_File_triggered()
 {
     QString filename=QFileDialog::getOpenFileName(this, tr("Open File"), "", "All files (*.*);;");
@@ -54,17 +53,13 @@ void MainWindow::on_actionLoad_File_triggered()
 }
 
 
-/*
- * Event for Save File
- */
 void MainWindow::on_actionSave_File_triggered()
 {
 
 }
 
-
-/*
- * Quit application
+/**
+ * @brief MainWindow::on_actionQuit_triggered Application terminates
  */
 void MainWindow::on_actionQuit_triggered()
 {
@@ -74,7 +69,6 @@ void MainWindow::on_actionQuit_triggered()
         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
     if (reply == QMessageBox::Save) {
-        QMessageBox::information(this, tr("Saved"), "");
         close();
         // TODO - Call NewFile trigger
     }
@@ -88,6 +82,9 @@ void MainWindow::on_actionQuit_triggered()
     }
 }
 
+/**
+ * @brief MainWindow::on_actionRun_program_triggered Exectutes the main program
+ */
 void MainWindow::on_actionRun_program_triggered()
 {
     try
@@ -115,6 +112,10 @@ void MainWindow::on_actionRun_program_triggered()
     }
 }
 
+/**
+ * @brief MainWindow::on_constantButton_clicked Create a constant
+ *
+ */
 void MainWindow::on_constantButton_clicked()
 {
     //Constant_Graphics()
