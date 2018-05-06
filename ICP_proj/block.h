@@ -35,6 +35,7 @@ public:
     in_port(const type_id_t type);
     value_t value();
     type_id_t get_type();
+    bool is_free();
     void attach(value_i & out);
 private:
     type_id_t type_m;
@@ -54,6 +55,7 @@ public:
     unsigned int get_max_size();
     value_t get_out_port_value(unsigned int index);
     block * get_sequence_succ();
+    block ** get_ptr_sequence_succ();
     size_t get_id();
     virtual void run();
 protected:

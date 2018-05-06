@@ -14,18 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icons/icon-c++.svg"));
 
+    scene_m->addItem(new Start_Graphics(nullptr, actual_project_m->get_start_addr()));
+
     ui->Frame_BlockPalette->layout()->setAlignment(Qt::AlignTop);
     ui->canvas->setScene(scene_m);
-
-    //block * ptr = new b_add_kg_to_kg(actual_project_m->get_type_lib());
-    //scene_m->addWidget(new Block_UI(nullptr, ptr, "abc"));
-    QPainterPath path = QPainterPath();
-    path.cubicTo(20, 0, 30, 50, 50, 50);
-    QGraphicsPathItem * ptr = scene_m->addPath(path, QPen(Qt::green, 3, Qt::SolidLine), QBrush(Qt::black));
-    //ptr->setPath();
-
-
-    //ui->main_field->mark_project(actual_project_m);
 }
 
 MainWindow::~MainWindow()
@@ -88,5 +80,32 @@ void MainWindow::on_actionQuit_triggered()
     if(reply == QMessageBox::Cancel)
     {
         return;
+    }
+}
+
+void MainWindow::on_actionRun_program_triggered()
+{
+    try
+    {
+        actual_project_m->run();
+        QMessageBox msgBox;
+        msgBox.setText("Scheme finnished succesfuly!");
+        msgBox.exec();
+    }
+    catch(exceptions_enum e)
+    {
+        QMessageBox msgBox;
+        switch (e) {
+        case cycle:
+            msgBox.setText("Cycle detected!");
+            msgBox.exec();
+            break;
+        case unconnected_in:
+            msgBox.setText("Unconnected in port detected!");
+            msgBox.exec();
+            break;
+        default:
+            break;
+        }
     }
 }

@@ -20,7 +20,8 @@ public:
 private:
     void create_unit(QTreeWidgetItem * parent, QString name);
     void create_default();
-    void create_default_aritmetic(QTreeWidgetItem * aritmetic);
+    void create_default_aritmetic(QTreeWidgetItem * parent);
+    void create_default_conversion(QTreeWidgetItem * parent);
 };
 
 class BlockName_UI : public QLabel

@@ -43,7 +43,8 @@ HEADERS += \
     block_templates.h \
     block_ui.h \
     canvas_ui.h \
-    blockpalette_ui.h
+    blockpalette_ui.h \
+    exceptions.h
 
 FORMS += \
         mainwindow.ui

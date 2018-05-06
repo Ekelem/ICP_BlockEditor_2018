@@ -44,13 +44,13 @@ bool type_mgr::type_already_exists(std::string type_name)
 
 void type_mgr::default_types()
 {
+    create_type("typeless");
     //weight
     create_type("kilogram");
     create_type("gram");
     create_type("miligram");
     create_type("ton");
     create_type("pound");
-    create_type("ounc");
 
     //length
     create_type("meter");

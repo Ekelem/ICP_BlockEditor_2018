@@ -119,6 +119,9 @@ void Canvas_Graphics::dropEvent(QGraphicsSceneDragDropEvent *event)
         new_block->show();
         new_block->setFlag(QGraphicsWidget::ItemIsMovable);
         new_block->setFlag(QGraphicsWidget::ItemIsSelectable);
+        new_block->setFlag(QGraphicsWidget::ItemIsFocusable);
+        new_block->setFocus();
+        this->scene()->setFocusItem(new_block);
     }
 }
 

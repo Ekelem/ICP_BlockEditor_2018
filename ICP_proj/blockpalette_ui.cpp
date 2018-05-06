@@ -21,13 +21,48 @@ void BlockPalette_UI::create_default()
 
     QTreeWidgetItem *conversion = new QTreeWidgetItem(this);
     conversion->setText(0, tr("Conversion"));
+
+    create_default_conversion(conversion);
 }
 
-void BlockPalette_UI::create_default_aritmetic(QTreeWidgetItem *aritmetic)
+void BlockPalette_UI::create_default_aritmetic(QTreeWidgetItem *parent)
 {
-    create_unit(aritmetic, "b_add_kg_to_kg");
-    create_unit(aritmetic, "b_add_g_to_g");
-    create_unit(aritmetic, "b_add_mg_to_mg");
+    create_unit(parent, "b_add_kg_to_kg");
+    create_unit(parent, "b_add_g_to_g");
+    create_unit(parent, "b_add_mg_to_mg");
+    create_unit(parent, "b_add_t_to_t");
+    create_unit(parent, "b_add_lb_to_lb");
+
+    create_unit(parent, "b_sub_kg_from_kg");
+    create_unit(parent, "b_sub_g_from_g");
+    create_unit(parent, "b_sub_mg_from_mg");
+    create_unit(parent, "b_sub_t_from_t");
+    create_unit(parent, "b_sub_lb_from_lb");
+
+    create_unit(parent, "b_mul_kg");
+    create_unit(parent, "b_mul_g");
+    create_unit(parent, "b_mul_mg");
+    create_unit(parent, "b_mul_t");
+    create_unit(parent, "b_mul_lb");
+}
+
+void BlockPalette_UI::create_default_conversion(QTreeWidgetItem *parent)
+{
+    create_unit(parent, "b_conv_kg_to_g");
+    create_unit(parent, "b_conv_kg_to_mg");
+    create_unit(parent, "b_conv_kg_to_t");
+    create_unit(parent, "b_conv_kg_to_lb");
+
+    create_unit(parent, "b_conv_g_to_kg");
+    create_unit(parent, "b_conv_mg_to_kg");
+    create_unit(parent, "b_conv_t_to_kg");
+    create_unit(parent, "b_conv_lb_to_kg");
+
+    create_unit(parent, "b_conv_kg_to_nthg");
+    create_unit(parent, "b_conv_g_to_nthg");
+    create_unit(parent, "b_conv_mg_to_nthg");
+    create_unit(parent, "b_conv_t_to_nthg");
+    create_unit(parent, "b_conv_lb_to_nthg");
 }
 
 BlockName_UI::BlockName_UI(QWidget *parent, QString name) : QLabel(name, parent)

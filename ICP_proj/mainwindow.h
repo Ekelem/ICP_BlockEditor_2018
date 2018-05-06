@@ -29,6 +29,8 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void on_actionRun_program_triggered();
+
 private:
     Ui::MainWindow *ui;
     project * actual_project_m;

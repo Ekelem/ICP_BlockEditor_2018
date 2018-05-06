@@ -36,6 +36,11 @@ type_id_t in_port::get_type()
     return type_m;
 }
 
+bool in_port::is_free()
+{
+    return value_m == nullptr ? true : false;
+}
+
 void in_port::attach(value_i & out)
 {
     if (out.get_type() == type_m)
@@ -89,6 +94,11 @@ value_t block::get_out_port_value(unsigned int index)
 block * block::get_sequence_succ()
 {
     return call_next;
+}
+
+block **block::get_ptr_sequence_succ()
+{
+    return &call_next;
 }
 
 size_t block::get_id()
