@@ -1,7 +1,4 @@
-==========================
-==========README==========
-==========================
-
+# README
 
 
 Predmet.........ICP
@@ -43,3 +40,7 @@ Specifikace požadavků
 
 Spustenie
     Projekt je možné preložiť pomocou make a následne spustiť pomocou make run
+
+## Final
+
+![Final](https://github.com/Ekelem/ICP_BlockEditor_2018/blob/master/doc/example.png)
