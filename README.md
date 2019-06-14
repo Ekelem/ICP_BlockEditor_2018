@@ -1,9 +1,13 @@
 # README
 
+![Final](https://github.com/Ekelem/ICP_BlockEditor_2018/blob/master/doc/example.png)
 
 Predmet: ICP
+
 Projekt: Blokový Editor
+
 Datum: 01.05.2018
+
 Autori: Erik Kelemen(xkelem01), Attila Lakatos(xlakat01)
 
 ## Zadanie:
@@ -39,7 +43,3 @@ Týmy budou dvoučlenné, výjimečně může být tým i tříčlenný a bude �
 
 ### Spustenie
     Projekt je možné preložiť pomocou make a následne spustiť pomocou make run
-
-## Final
-
-![Final](https://github.com/Ekelem/ICP_BlockEditor_2018/blob/master/doc/example.png)
